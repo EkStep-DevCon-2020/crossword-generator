@@ -3,38 +3,34 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "crossword-generator-angular": {
+    "devcon2020": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
-      "projectType": "application",
       "prefix": "app",
-      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/crossword-generator-angular",
+            "outputPath": "dist/devcon2020",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.css",
-              "src/assets/styles/semantic/semantic.min.css"
+              "src/styles.scss",
+              "src/assets/styles.css"
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "src/assets/libs/crossword.js",
-              "src/assets/libs/generator.js",
-              "src/assets/libs/word-clues.js",
-              "src/assets/libs/settings.js",
-              "src/assets/libs/labels.js",
-              "src/assets/libs/semantic.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -52,25 +48,32 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "crossword-generator-angular:build"
+            "browserTarget": "devcon2020:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "crossword-generator-angular:build:production"
+              "browserTarget": "devcon2020:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "crossword-generator-angular:build"
+            "browserTarget": "devcon2020:build"
           }
         },
         "test": {
@@ -78,54 +81,44 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.css"
-            ],
-            "scripts": [],
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
               "src/assets"
-            ]
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
-        }
-      }
-    },
-    "crossword-generator-angular-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
+        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "crossword-generator-angular:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "devServerTarget": "devcon2020:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "devcon2020:serve:production"
+            }
           }
         }
       }
-    }
-  },
-  "defaultProject": "crossword-generator-angular"
+    }},
+  "defaultProject": "devcon2020"
 }
