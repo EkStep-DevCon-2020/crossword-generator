@@ -1,82 +1,106 @@
 
-    <div class="login-bg">
-        <div class="login-container">
-            <div class="logo">
-                <img src="assets/images/brand-logo.png" alt="brand logo">
+   <div class="login-bg">
+    <div class="login-container">
+        <div class="logo">
+            <img src="./../../../../../assets/images/brand-logo.png" alt="brand
+                logo">
+        </div>
+        <div class="main-container">
+            <div class="info">
+                <div class="title">What is Lorem Ipsum?</div>
+                <div class="para">
+                    <p> Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has
+                        been the industry's standard dummy text ever since the
+                        1500s</p>
+                </div>
+                <div class="content-creation">
+                    <img src="./../../../../../assets/images/component-2.png"
+                        alt="content creation">
+                    <span>Content Creation</span>
+                </div>
+                <div class="content-review">
+                    <img src="./../../../../../assets/images/component.png"
+                        alt="content creation">
+                    <span>Content Review</span>
+                </div>
             </div>
-            <div class="main-container">
-                <div class="info">
-                    <div class="title">What is Lorem Ipsum?</div>
-                    <div class="para">
-                        <p> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                            been the industry's standard dummy text ever since the 1500s</p>
-                    </div>
-                    <div class="content-creation">
-                        <img src="assets/images/component-2.png" alt="content creation">
-                        <span>Content Creation</span>
-                    </div>
-                    <div class="content-review">
-                        <img src="assets/images/component.png" alt="content creation">
-                        <span>Content Review</span>
+            <div class="scaner-section">
+                <div class="scaner" *ngIf="!qrCode && !captureImage">
+                    <img class="scanner-gif"
+                        src="./../../../../../assets/images/scaner.gif"
+                        alt="scaner">
+                    <button type="button" class="capture-btn" id="myBtn"
+                        (click)="startCamera();captureImage=!captureImage;">Capture</button>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <a (click)="qrCode= !qrCode">QR Code</a>
                     </div>
                 </div>
-                <div class="scaner-section">
-                    <div class="scaner">
-                        <img src="assets/images/scaner.gif" alt="scaner">
-                        <button type="button" class="capture-btn" id="myBtn">Capture</button>
-                        <div class="qrcode-link">
-                            <div class="seperator">OR</div>
-                            <a href="">QR Code</a>
-                        </div>
+
+                <div class="scaner" *ngIf="!qrCode && captureImage">
+                    <video #video class="vid" autoplay></video>
+                    <canvas #canvas class="vid"></canvas>
+                    <button type="button" class="capture-btn" id="myBtn"
+                        (click)="capture()">Capture</button>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <a (click)="qrCode= !qrCode">QR Code</a>
                     </div>
+                </div>
 
-
-                    <!-- <div class="qr-code">
-                        <img src="assets/images/qr-code.svg" alt="QR Code">
-                        <div class="input-container">
-                            <input class="input-field" type="text" placeholder="Enter your QR Code" name="qr-code">
-                            <span class="icon"></span>
-                        </div>
-                        <div class="qrcode-link">
-                            <div class="seperator">OR</div>
-                            <a href="">Capture</a>
-                        </div>
-                    </div> -->
+                <div class="qr-code" *ngIf="qrCode">
+                    <img src="./../../../../../assets/images/qr-code.svg"
+                        alt="QR Code">
+                    <div class="input-container">
+                        <input class="input-field" type="text"
+                            placeholder="Enter your QR Code" name="qr-code">
+                        <span class="icon"></span>
+                    </div>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <a (click)="qrCode= !qrCode; startCamera();">Capture</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
-    <!-- Trigger/Open The Modal -->
-
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-body">
-                <!-- status message modal content -->
-                <div class="status-content">
-                    <img src="assets/images/check.gif" alt="checked">
-                    <div class="status-info">
-                        <div class="title">
-                            Title comes here
-                        </div>
-                        <div class="status-msg"> You are recognized as Mr/Mrs. NAME COMES HERE. Please confirm and
-                            continue to create your content.</div>
+<div id="myModal" class="login-modal" *ngIf="openErrorModal || openSuccessModal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <!-- status message modal content -->
+            <div class="status-content" *ngIf="openSuccessModal">
+                <img src="./../../../../../assets/images/check.gif"
+                    alt="checked">
+                <div class="status-info">
+                    <div class="title">
+                        Title comes here
                     </div>
-                    <a href="landing-page.html" target="_blank" class="sb-btn sb-btn-primary sb-btn-normal">CONFIRM</a>
+                    <div class="status-msg"> You are recognized as Mr/Mrs. NAME
+                        COMES HERE. Please confirm and
+                        continue to create your content.</div>
                 </div>
-                <!-- failed message modal content -->
-                <div class="status-content" style="display: none;">
-                    <img src="assets/images/failed.gif" alt="failed">
-                    <div class="status-info">
-                        <div class="title">
-                            Title comes here
-                        </div>
-                        <div class="status-msg"> You are not recognized. Please try again or continue with QR Code.
-                        </div>
+                <a href="/create" class="sb-btn sb-btn-secondary sb-btn-normal"
+                    (click)="openErrorModal = false;">CONFIRM</a>
+            </div>
+            <!-- failed message modal content -->
+            <div class="status-content" *ngIf="openErrorModal">
+                <img src="./../../../../../assets/images/failed.gif"
+                    alt="failed">
+                <div class="status-info">
+                    <div class="title">
+                        Title comes here
                     </div>
-                    <button type="button" class="sb-btn sb-btn-normal close-btn">CLOSE</button>
+                    <div class="status-msg"> You are not recognized. Please try
+                        again or continue with QR Code.
+                    </div>
                 </div>
+                <a type="button" class="sb-btn sb-btn-normal close-btn" href="/create"
+                    (click)="startCamera()">CLOSE</a>
             </div>
         </div>
+    </div>
+</div>
