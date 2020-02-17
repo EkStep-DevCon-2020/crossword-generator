@@ -12,13 +12,13 @@ window.onload = function(){
     // regenerate.addEventListener('click', generate, false);
 
 
-    generate();
+    generate(10, entries);
 
 
 };
 
 
-function generate(cwRows){
+function generate(cwRows, entries){
     if(typeof entries === 'undefined'){
         alert('Could not find list of words and clues');
         return;

@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './components';
+import { LoginComponent, CrosswordGeneratorComponent } from './components';
 
 const routes: Routes = [{
   path: '', component: LoginComponent
+}, {
+  path: 'cw', component: CrosswordGeneratorComponent
 }];
 
 @NgModule({

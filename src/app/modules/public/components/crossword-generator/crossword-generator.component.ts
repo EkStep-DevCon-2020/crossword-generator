@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import * as _ from 'lodash-es';
 declare const Crossword: any;
 declare const generate: any;
+declare let entries: any;
 
 @Component({
   selector: 'app-crossword-generator',
@@ -36,14 +37,25 @@ export class CrosswordGeneratorComponent implements OnInit {
 
   ngOnInit() {}
 
+
   getRows(val) {
-    generate(Number(val));
     this.http.get(this.conceptNetAPI).subscribe((response: any) => {
       console.log(response.edges);
       this.filteredEdges =  _.filter(response.edges, (edge) => {
-        return _.find(edge.sources, {contributor: this.contributor});
+        if (this.contributor.length > 0) {
+          return _.find(edge.sources, {contributor: this.contributor});
+        } else {
+          return 1;
+        }
+      }).map(e => {
+        return {
+          ['word']: e.start.label,
+          ['clue']: e.end.label};
       });
-      console.log(this.filteredEdges);
+
+      entries = this.filteredEdges;
+      generate(Number(val), entries);
+
     }, (error) => {
       console.log(error);
     });

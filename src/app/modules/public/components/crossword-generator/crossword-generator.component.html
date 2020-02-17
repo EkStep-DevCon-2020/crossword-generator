@@ -2,7 +2,7 @@
   <div class="nine wide column">
     <div id="crossword"></div>
     <div *ngFor="let edge of filteredEdges">
-      {{edge.start.label}} - {{edge.end.label}}
+      {{edge.word}} - {{edge.clue}}
     </div>
     <div class="half_width">
       <table id="clues">
@@ -17,7 +17,7 @@
             <td>
               <ul id="across">
                 <li *ngFor="let edge of filteredEdges">
-                  {{edge.start.label}} - {{edge.end.label}}
+                  {{word}} - {{clue}}
                 </li>
               </ul>
             </td>
