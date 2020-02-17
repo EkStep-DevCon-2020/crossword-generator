@@ -1,6 +1,9 @@
 <div class="ui grid">
   <div class="nine wide column">
     <div id="crossword"></div>
+    <div *ngFor="let edge of filteredEdges">
+      {{edge.start.label}} - {{edge.end.label}}
+    </div>
     <div class="half_width">
       <table id="clues">
         <thead>
@@ -12,7 +15,11 @@
         <tbody>
           <tr>
             <td>
-              <ul id="across"></ul>
+              <ul id="across">
+                <li *ngFor="let edge of filteredEdges">
+                  {{edge.start.label}} - {{edge.end.label}}
+                </li>
+              </ul>
             </td>
             <td>
               <ul id="down"></ul>
