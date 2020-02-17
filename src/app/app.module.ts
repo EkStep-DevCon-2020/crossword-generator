@@ -1,18 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule,  } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 
+import { AppRoutingModule } from './app-routing';
 import { AppComponent } from './app.component';
-import { CrosswordGeneratorComponent } from './components/crossword-generator/crossword-generator.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CrosswordGeneratorComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
