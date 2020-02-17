@@ -1,5 +1,8 @@
-<div class="ui grid">
-  <div class="nine wide column">
+<div class="main-container">
+  <div class="main-body">
+    <div class="header">
+      <h1 class="header-title">CrossWords</h1>
+    </div>
     <div id="crossword"></div>
     <div *ngFor="let edge of filteredEdges">
       {{edge.word}} - {{edge.clue}}
@@ -31,8 +34,11 @@
     <div id="output">Output</div>
 
   </div>
-  <div class="two wide column">
-    <div class="ui input">
+  <div class="main-sidebar">
+    <div class="show-settings">
+      <h5>Show Settings</h5>
+    </div>
+    <div class="ui input settings-input">
       <input #cwRow (keyup.enter)="getRows(cwRow.value)" type="text" placeholder="Search...">
     </div>
     <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
