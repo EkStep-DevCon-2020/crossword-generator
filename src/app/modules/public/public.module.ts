@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent, CrosswordGeneratorComponent } from './components';
+import { LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent } from './components';
 import { PublicRoutingModule } from './public-routing.module';
 
 @NgModule({
@@ -8,6 +8,6 @@ import { PublicRoutingModule } from './public-routing.module';
     CommonModule,
     PublicRoutingModule
   ],
-  declarations: [LoginComponent, CrosswordGeneratorComponent]
+  declarations: [LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent]
 })
 export class PublicModule { }
