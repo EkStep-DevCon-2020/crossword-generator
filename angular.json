@@ -28,9 +28,19 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/assets/styles.css"
+              "src/styles.css",
+              "src/assets/styles.css",
+              "src/assets/styles/semantic/semantic.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/assets/libs/crossword.js",
+              "src/assets/libs/generator.js",
+              "src/assets/libs/word-clues.js",
+              "src/assets/libs/settings.js",
+              "src/assets/libs/labels.js",
+              "src/assets/libs/semantic.min.js"
+            ]
           },
           "configurations": {
             "production": {

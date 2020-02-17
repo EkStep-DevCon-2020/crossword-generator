@@ -12,13 +12,13 @@ window.onload = function(){
     // regenerate.addEventListener('click', generate, false);
 
 
-    generate();
+    generate(10, entries);
 
 
 };
 
 
-function generate(cwRows){
+function generate(cwRows, entries){
     if(typeof entries === 'undefined'){
         alert('Could not find list of words and clues');
         return;
@@ -116,14 +116,14 @@ function printJson(groups){
 
 
     var json = JSON.stringify(puzzle, null, 4)
-    // document.getElementById('output').innerHTML = '<pre>' + json + '</pre>';
+    document.getElementById('output').innerHTML = '<pre>' + json + '</pre>';
 }
 
 function addLegendToPage(groups){
     for(var k in groups){
         var html = [];
         for(var i = 0; i < groups[k].length; i++){
-            // html.push("<li><strong>" + groups[k][i]['position'] + ".</strong> " + groups[k][i]['clue'] + "</li>");
+            html.push("<li><strong>" + groups[k][i]['position'] + ".</strong> " + groups[k][i]['clue'] + "</li>");
 
         }
         document.getElementById(k).innerHTML = html.join("\n");

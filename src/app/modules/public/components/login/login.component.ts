@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
         }
       }
     };
-    this.userService.post(request).pipe().subscribe((response) => {
+    this.configService.post(request).pipe().subscribe((response) => {
       console.log('errrsrs response', response);
       const signedURL = response.result.pre_signed_url;
       const config = {
