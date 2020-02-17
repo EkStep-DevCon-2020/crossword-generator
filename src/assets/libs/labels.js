@@ -1,0 +1,21 @@
+var labels={
+  clear_dialog_title: "Warning",
+  clear_dialog_text: "Do you really want to clear the board?",
+  crossword_theme : "General",
+  description : "Tired of crossword games that don't run on mobile devices? Then give this one a try. It is a modern game with HTML5 canvas and material design elements.",
+  help_text :  "Fill in the correct answers, one letter per square, both across and down, from the given clues. You can reveal a letter or word when you are stuck.",
+  help_title: "Instructions",
+  game_title:"Crossword",
+  button_label_dialog_close: "Close",
+  across:"Across",
+  down:"Down",
+  congrat_title: "Well done!",
+  btn_label_share_win: "Share",
+  btn_label_yes: "Yes",
+  btn_label_no: "No",
+  reveal_letter: "Reveal letter",
+  reveal_word: "Reveal word",
+  submit_answer:"Answer",
+  clear_dialog_title: "Warning",
+  clear_dialog_text: "Do you really want to clear the board?"
+}

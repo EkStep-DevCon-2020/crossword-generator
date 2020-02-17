@@ -1,1 +1,143 @@
 /* You can add global styles to this file, and also import other style files */
+
+body, html{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;
+  width:100%;
+  box-sizing: content-box;
+}
+
+
+
+#regenerate, #copy{
+  width:120px;
+  margin:auto;
+  display:block;
+  margin-top:20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+  background: #f8f8f8;
+  border:1px solid #ccc;
+  padding:4px;
+  color:black;
+}
+
+
+a{
+  text-decoration: none;
+}
+
+a#regenerate:hover, a#copy:hover{
+  background: #f5f5f5;
+}
+
+a#regenerate:active, a#copy:active{
+  background: #e3e3e3;
+}
+
+
+
+.label{
+  width: 150px;
+  display: block;
+}
+
+.cw_size{
+  width: 40px;
+  margin: 0 0 10px 0;
+}
+
+.half_width{
+  width:50%;
+  /* float:left */
+}
+
+hr{
+  width:100%;
+}
+
+#generator{
+  display:block;
+  width:100%;
+  clear:both;
+  overflow:auto;
+  background: #efefef;
+  padding:10px;
+}
+
+#output{
+  width:100%;
+  display:block;
+  float:none;
+  position: relative;
+  border: 1px solid #e6e6e6;
+  margin-top: 20px;
+  background: #fcfcfc;
+}
+
+ul{
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+li{
+  list-style-type: none;
+  display: inline-block;
+
+}
+
+
+.line{
+  float:left;
+}
+
+
+
+.crossword {
+  border-collapse:collapse;
+  font-family:"Courier New", Courier, monospace;
+  text-align:center;
+  margin-left: auto;
+  margin-right: auto;
+
+
+}
+
+.crossword td {
+  border:1px solid black;
+  padding:0;
+  margin:0;
+  vertical-align:middle;
+  padding:0;
+  text-align:center;
+  width:30px;
+  height:30px;
+  background: #efefef;
+}
+
+.crossword .no-border {
+  border:1px solid rgb(206, 198, 198, 0.3);
+  background: #000000 !important;
+}
+
+#across li, #down li{
+  display: block;
+  text-align: left;
+}
+
+#clues {
+  width:100%;
+
+}
+
+#clues td {
+  vertical-align:top;
+  width:50%;
+}
+
+td ul{
+  width:50%;
+}

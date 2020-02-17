@@ -1,0 +1,36 @@
+<div class="ui grid">
+  <div class="nine wide column">
+    <div id="crossword"></div>
+    <div class="half_width">
+      <table id="clues">
+        <thead>
+          <tr>
+            <!-- <th>Across</th>
+            <th>Down</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <ul id="across"></ul>
+            </td>
+            <td>
+              <ul id="down"></ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- <div id="output">Output</div> -->
+
+  </div>
+  <div class="two wide column">
+    <div class="ui input">
+      <input #cwRow (keyup.enter)="getRows(cwRow.value)" type="text" placeholder="Search...">
+    </div>
+    <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
+    <button class="ui primary button" (click)="getRows(cwRow.value)">Regenerate</button>
+  </div>
+</div>
+<!--
+<a href="#" id="copy" data-clipboard-target="#output">Copy JSON</a> -->
