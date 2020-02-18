@@ -1,7 +1,7 @@
-<div class="sb-card-container">
+<div class="sb-card-container" *ngIf="!showPreview">
 
     <div class="sb-card" *ngFor="let video of videoList">
-        <div class="sb-body">
+        <div class="sb-body" (click)="clickHandler(video)">
             <div class="sb-card-image mr-16">
                 <img src="assets/images/video-placeholder.jpg">
               </div>
@@ -15,5 +15,15 @@
 
 </div>
 
-<!-- <sb-library-cards-grid  [title]="key" *ngIf="videoList" [title]="key"
-      [contentList]="videoList" [maxCardCount]="5" [type]="'infinite_card_grid'" (cardClick)="collectionClickHandler($event)"></sb-library-cards-grid> -->
+<div *ngIf="showPreview">
+<video 
+   *ngIf="selVideo.artifactUrl" 
+   id="video_player_id"
+   class="video-js vjs-big-play-centered"
+   controls 
+   preload="auto">
+   <source src="{{selVideo.artifactUrl}}" type="video/mp4">
+ </video> 
+
+ <app-add-marker [videoPlayerInstance]='videoPlayerInstance'></app-add-marker>
+</div>
