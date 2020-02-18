@@ -4,14 +4,15 @@ import { LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent } from 
 import { HttpClientModule } from '@angular/common/http';
 
 import { PublicRoutingModule } from './public-routing.module';
-import {SuiDropdownModule} from 'ng2-semantic-ui';
+import {SuiDropdownModule, SuiDimmerModule} from 'ng2-semantic-ui';
 
 @NgModule({
   imports: [
     CommonModule,
     PublicRoutingModule,
     HttpClientModule,
-    SuiDropdownModule
+    SuiDropdownModule,
+    SuiDimmerModule
   ],
   declarations: [LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent]
 })

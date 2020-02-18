@@ -7,12 +7,34 @@
     <div *ngFor="let edge of filteredEdges">
       {{edge.word}} - {{edge.clue}}
     </div>
+    <div id="output">Output</div>
+
+  </div>
+  <div class="main-sidebar">
+    <div class="show-settings">
+      <h5>Show Settings</h5>
+    </div>
+    <div class="ui input settings-input">
+      <input #cwRow (keyup.enter)="getRows(cwRow.value)" type="text" placeholder="Search...">
+    </div>
+
+    <div class="ui primary dropdown button settings-input" suiDropdown [(isOpen)]="isOpen" [isDisabled]="isDisabled">
+      <div class="text">{{category || 'Select Category'}}</div>
+      <i class="dropdown icon"></i>
+      <div class="menu" suiDropdownMenu>
+        <div *ngFor="let top of topic" class="item" (click)="onCategoryChange(top.type, top.rel);">{{top.type}}</div>
+      </div>
+    </div>
+    <div class="ui settings-input">
+      <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
+      <button class="ui primary button" (click)="getRows(cwRow.value)">Regenerate</button>
+    </div>
     <div class="half_width">
       <table id="clues">
         <thead>
           <tr>
-            <!-- <th>Across</th>
-            <th>Down</th> -->
+            <th>Across</th>
+            <th>Down</th>
           </tr>
         </thead>
         <tbody>
@@ -31,30 +53,11 @@
         </tbody>
       </table>
     </div>
-    <div id="output">Output</div>
-
-  </div>
-  <div class="main-sidebar">
-    <div class="show-settings">
-      <h5>Show Settings</h5>
-    </div>
-    <div class="ui input settings-input">
-      <input #cwRow (keyup.enter)="getRows(cwRow.value)" type="text" placeholder="Search...">
-    </div>
-
-    <div class="ui primary dropdown button settings-input" suiDropdown [(isOpen)]="isOpen" [isDisabled]="isDisabled">
-      <div class="text">Dropdown</div>
-      <i class="dropdown icon"></i>
-      <div class="menu" suiDropdownMenu>
-        <div class="item">Item 1</div>
-        <div class="item">Item 4</div>
-      </div>
-    </div>
-    <div class="ui settings-input">
-      <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
-      <button class="ui primary button" (click)="getRows(cwRow.value)">Regenerate</button>
-    </div>
   </div>
 </div>
+
+<sui-dimmer class="inverted" [(isDimmed)]="segmentDimmed">
+  <div class="ui text loader">Enables loading screens!</div>
+</sui-dimmer>
 <!--
 <a href="#" id="copy" data-clipboard-target="#output">Copy JSON</a> -->

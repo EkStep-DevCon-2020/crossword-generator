@@ -49,7 +49,7 @@ a#regenerate:active, a#copy:active{
 }
 
 .half_width{
-  width:50%;
+  /* width:50%; */
   /* float:left */
 }
 
