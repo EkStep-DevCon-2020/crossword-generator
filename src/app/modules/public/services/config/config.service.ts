@@ -19,12 +19,10 @@ export class ConfigService {
   private getHeader(headers?: any) {
     // tslint:disable-next-line:variable-name
     const default_headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
       // tslint:disable-next-line:max-line-length
       Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZWU4YTgxNDNiZWE0NDU4YjQxMjcyNTU5ZDBhNTczMiJ9.7m4mIUaiPwh_o9cvJuyZuGrOdkfh0Nm0E_25Cl21kxE'
     };
-    return { ...default_headers };
+    return { ...default_headers, ...headers };
   }
 
   post(requestParam): Observable<any> {
