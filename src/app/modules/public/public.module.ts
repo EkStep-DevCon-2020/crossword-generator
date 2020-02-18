@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent, CrosswordGeneratorComponent } from './components';
+import { LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent } from './components';
 import { HttpClientModule } from '@angular/common/http';
+
 import { PublicRoutingModule } from './public-routing.module';
 import {SuiDropdownModule} from 'ng2-semantic-ui';
 
@@ -12,6 +13,6 @@ import {SuiDropdownModule} from 'ng2-semantic-ui';
     HttpClientModule,
     SuiDropdownModule
   ],
-  declarations: [LoginComponent, CrosswordGeneratorComponent]
+  declarations: [LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent]
 })
 export class PublicModule { }
