@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription, of, throwError, Observable, Subject, forkJoin } from 'rxjs';
 import { map, mergeMap, first } from 'rxjs/operators';
@@ -6,19 +6,26 @@ import * as _ from 'lodash-es';
 declare const Crossword: any;
 declare const generate: any;
 declare let entries: any;
+declare let globalCW: any;
+declare const addLegendToPage: any;
+declare const printJson: any;
 
 @Component({
   selector: 'app-crossword-generator',
   templateUrl: './crossword-generator.component.html',
   styleUrls: ['./crossword-generator.component.scss']
 })
-export class CrosswordGeneratorComponent implements OnInit {
+export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
 
   private relativeParam =  `/r/UsedFor`;
   private limit = `&limit=200`;
   private contributor = '/s/resource/verbosity';
   public category: any;
   public segmentDimmed = false;
+  public customClues = false;
+  public wordClues: any;
+  public showEditButton = false;
+  public editingClues = false;
   public topic = [
     {type: 'animal', rel: ['/r/UsedFor', '/r/IsA'], sentence: '___ is used for '},
     {type: 'fruit', rel: ['/r/HasA', '/r/IsA'], sentence: '___ has a '},
@@ -48,11 +55,13 @@ export class CrosswordGeneratorComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    // this.getRows(10);
   }
 
 
   getRows(val) {
     this.segmentDimmed = true;
+    this.showEditButton = false;
     this.http.get(`${this.conceptNetAPI}${this.category}?rel=${this.relativeParam}&limit=100`).pipe(
       mergeMap((res: any) => {
         const results = res.edges;
@@ -71,10 +80,6 @@ export class CrosswordGeneratorComponent implements OnInit {
         const secondRel = _.find(this.topic, {type: this.category}).rel[1];
         const firstFilter = _.filter(item.edges, i => i.rel['@id'].includes(firstRel));
         const secondFilter = _.filter(item.edges, i => i.rel['@id'].includes(secondRel));
-        console.log(firstFilter);
-        console.log(secondFilter);
-        console.log('_______');
-
         if (firstFilter && firstFilter.length >= 1) {
           return {
               ['word']: firstFilter[0].start.label,
@@ -87,11 +92,12 @@ export class CrosswordGeneratorComponent implements OnInit {
           };
         }
       });
-      console.log(this.filteredEdges);
       this.filteredEdges = _.uniqBy(_.compact(this.filteredEdges), 'word');
-      console.log(this.filteredEdges);
       this.segmentDimmed = false;
+      this.showEditButton = true;
+      this.customClues = true;
       generate(Number(val), this.filteredEdges);
+      this.wordClues = globalCW;
     });
 }
 
@@ -119,12 +125,30 @@ formClue(clue, rel) {
   }
 }
 
+updateClue(e, id) {
+  const presentInAcross = _.find(this.wordClues.across, {id});
+  // const presentInDown = _.find(this.wordClues.down, {id});
+  const searchObj = (presentInAcross) ? this.wordClues.across : this.wordClues.down;
+  const newWordClues = _.map(searchObj, (obj) => {
+    return obj.id === id ? {  ...obj, clue: e.target.value } : obj;
+  });
+  (presentInAcross) ? this.wordClues.across = newWordClues : this.wordClues.down = newWordClues;
+  // addLegendToPage(this.wordClues);
+  printJson(this.wordClues);
+}
+editState() {
+  this.editingClues = !this.editingClues;
+}
 removeDuplicateWords(clue) {
   return Array.from(new Set(clue.split(','))).toString();
 }
 
 filterWordsWithSpace(word) {
   return !word.includes(' ');
+}
+
+ngAfterViewInit() {
+
 }
 
 }

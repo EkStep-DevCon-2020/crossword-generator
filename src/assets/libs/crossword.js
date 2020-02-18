@@ -129,7 +129,7 @@ this.height = GRID_ROWS;
                   // does a word start here? (make sure the cell isn't null, first)
                   if(cell && cell[k] && cell[k]['is_start_of_word']){
                       var index = cell[k]['index'];
-                      groups[k].push({"position" : position, "index" : index, "clue" : clues_in[index], "word" : words_in[index], "row":r, "col":c, "dir":k=='across'?'H':'V'});
+                      groups[k].push({"position" : position, "index" : index, "clue" : clues_in[index], "word" : words_in[index], "row":r, "col":c, "dir":k=='across'?'H':'V', id: generateID()});
                       increment_position = true;
                   }
               }
@@ -335,6 +335,13 @@ this.height = GRID_ROWS;
 
       return best;
   }
+
+  var generateID = function () {
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    return '_' + Math.random().toString(36).substr(2, 9);
+  };
 
   var clear = function(){
       for(var r = 0; r < grid.length; r++){

@@ -131,3 +131,8 @@ var entries = [
   { word: 'TEMPO', clue: 'Speed of music' },
   { word: 'LEOPARD', clue: 'Fast cat' },
 ]
+
+
+var globalCW = {
+
+};
