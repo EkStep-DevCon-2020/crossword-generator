@@ -8,7 +8,7 @@ window.onload = function () {
     // var regenerate = document.getElementById('regenerate');
     // regenerate.addEventListener('click', generate, false);
 
-    generate(10, entries);
+    // generate(10, entries);
 
 
 };
