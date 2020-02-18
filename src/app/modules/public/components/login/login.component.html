@@ -1,35 +1,17 @@
-
-   <div class="login-bg">
-    <div class="login-container">
-        <div class="logo">
-            <img src="./../../../../../assets/images/brand-logo.png" alt="brand
-                logo">
-        </div>
-        <div class="main-container">
-            <div class="info">
-                <div class="title">What is Lorem Ipsum?</div>
-                <div class="para">
-                    <p> Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has
-                        been the industry's standard dummy text ever since the
-                        1500s</p>
-                </div>
-                <div class="content-creation">
-                    <img src="./../../../../../assets/images/component-2.png"
-                        alt="content creation">
-                    <span>Content Creation</span>
-                </div>
-                <div class="content-review">
-                    <img src="./../../../../../assets/images/component.png"
-                        alt="content creation">
-                    <span>Content Review</span>
-                </div>
+<div class="login-bg">
+    <div class="main">
+        <div class="logo-section">
+            <div class="brand-logo">
+                <img src="./../../../../../assets/images/sunbird_logo.png" alt="brand logo">
             </div>
+            <div class="main-logo">
+                <img src="./../../../../../assets/images/final-logo.jpg" alt=" logo">
+            </div>
+        </div>
+        <div class="login-conatiner-main">
             <div class="scaner-section">
                 <div class="scaner" *ngIf="!qrCode && !captureImage">
-                    <img class="scanner-gif"
-                        src="./../../../../../assets/images/scaner.gif"
-                        alt="scaner">
+                    <img class="scanner-gif" src="./../../../../../assets/images/scaner.gif" alt="scaner">
                     <button type="button" class="capture-btn" id="myBtn"
                         (click)="startCamera();captureImage=!captureImage;">Capture</button>
                     <div class="qrcode-link">
@@ -37,24 +19,21 @@
                         <a (click)="qrCode= !qrCode">QR Code</a>
                     </div>
                 </div>
-
+    
                 <div class="scaner" *ngIf="!qrCode && captureImage">
                     <video #video class="vid" autoplay></video>
                     <canvas #canvas class="vid"></canvas>
-                    <button type="button" class="capture-btn" id="myBtn"
-                        (click)="capture()">Capture</button>
+                    <button type="button" class="capture-btn" id="myBtn" (click)="capture()">Capture</button>
                     <div class="qrcode-link">
                         <span class="seperator">OR</span>
                         <a (click)="qrCode= !qrCode">QR Code</a>
                     </div>
                 </div>
-
+    
                 <div class="qr-code" *ngIf="qrCode">
-                    <img src="./../../../../../assets/images/qr-code.svg"
-                        alt="QR Code">
+                    <img src="./../../../../../assets/images/qr-code.svg" alt="QR Code">
                     <div class="input-container">
-                        <input class="input-field" type="text"
-                            placeholder="Enter your QR Code" name="qr-code">
+                        <input class="input-field" type="text" placeholder="Enter your QR Code" name="qr-code">
                         <span class="icon"></span>
                     </div>
                     <div class="qrcode-link">
@@ -65,16 +44,16 @@
             </div>
         </div>
     </div>
+    
+   
 </div>
 
 
 <div id="myModal" class="login-modal" *ngIf="openErrorModal || openSuccessModal">
     <div class="modal-content">
         <div class="modal-body">
-            <!-- status message modal content -->
             <div class="status-content" *ngIf="openSuccessModal">
-                <img src="./../../../../../assets/images/check.gif"
-                    alt="checked">
+                <img src="./../../../../../assets/images/check.gif" alt="checked">
                 <div class="status-info">
                     <div class="title">
                         Title comes here
@@ -88,8 +67,7 @@
             </div>
             <!-- failed message modal content -->
             <div class="status-content" *ngIf="openErrorModal">
-                <img src="./../../../../../assets/images/failed.gif"
-                    alt="failed">
+                <img src="./../../../../../assets/images/failed.gif" alt="failed">
                 <div class="status-info">
                     <div class="title">
                         Title comes here
@@ -98,8 +76,7 @@
                         again or continue with QR Code.
                     </div>
                 </div>
-                <a type="button" class="sb-btn sb-btn-normal close-btn"
-                    (click)="closeModal()">CLOSE</a>
+                <a type="button" class="sb-btn sb-btn-normal close-btn" (click)="closeModal()">CLOSE</a>
             </div>
         </div>
     </div>
