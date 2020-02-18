@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { UUID } from 'angular2-uuid';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const STALL_ID = 'creation_2';
 const IDEA_ID = 'crossword';
@@ -21,8 +22,11 @@ export class LoginComponent implements OnInit {
   openSuccessModal = false;
   openErrorModal = false;
   captureImage = false;
+  visitorid = '';
+  name = '';
   qrCode = false;
   image: string;
+  camera;
   constraints = {
     video: {
       facingMode: 'environment',
@@ -33,7 +37,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
-              public telemetryServcie: TelemetryService) { }
+              public telemetryServcie: TelemetryService,
+              public router: Router) { }
 
   ngOnInit() {
     this.telemetryServcie.initialize({
@@ -44,7 +49,6 @@ export class LoginComponent implements OnInit {
   }
 
   startCamera() {
-    this.openErrorModal = false;
     if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
       navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(this.handleError);
     } else {
@@ -57,6 +61,7 @@ export class LoginComponent implements OnInit {
   }
 
   attachVideo(stream) {
+    this.camera = stream.getTracks()[0];
     this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
     this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
       this.videoHeight = this.videoElement.nativeElement.videoHeight;
@@ -88,7 +93,9 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
+        this.camera.stop();
         return throwError(errInfo);
+
       })).subscribe((response) => {
         console.log('response ', response);
         this.identifyFace(response);
@@ -115,8 +122,48 @@ export class LoginComponent implements OnInit {
       this.telemetryServcie.visit(data);
       this.openSuccessModal = true;
       this.openErrorModal = false;
+      this.name = res.result.name;
       console.log('response ', res);
     });
+  }
+
+  getUserDtailsByVisitorId() {
+    if (this.visitorid) {
+      const request = {
+        url: `reg/search`,
+        header: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          request: {
+            entityType: ['Visitor'],
+            filters: {
+              code: {
+                eq : this.visitorid
+              }
+            }
+          }
+        }
+      };
+      this.configService.post(request).pipe().subscribe((res) => {
+        if (res.result.Visitor) {
+          console.log('response ', res.result.Visitor[0]);
+          const data = {
+            profileId: res.result.Visitor[0].osid
+          };
+          this.telemetryServcie.visit(data);
+          this.openSuccessModal = true;
+          this.openErrorModal = false;
+          this.name = res.result.Visitor[0].name;
+        }
+      });
+
+    }
+  }
+
+  gotoWorkspace() {
+    // this.closeModal();
+    this.router.navigate(['/workspace']);
   }
 
   closeModal() {
