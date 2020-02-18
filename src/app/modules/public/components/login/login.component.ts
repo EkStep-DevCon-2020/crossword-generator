@@ -59,55 +59,57 @@ export class LoginComponent implements OnInit {
     this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
     this.image = this.canvas.nativeElement.toDataURL('image/png');
-    this.openSuccessModal = true;
-    this.openErrorModal = false;
-    this.getFileData();
+    this.uploadImage();
+  }
+
+  uploadImage() {
+    const id = UUID.UUID();
+    const imageId = 'do_11295943688090419214';
+    const imageName = `${id}.png`;
+    fetch(this.image)
+    .then(res => res.blob())
+    .then(blob => {
+      const fd = new FormData();
+      const file = new File([blob], imageName);
+      fd.append('file', file);
+      const request = {
+        url: `private/content/v3/upload/${imageId}`,
+        data: fd
+      };
+      this.configService.post(request).pipe(catchError(err => {
+        const errInfo = { errorMsg: 'Image upload failed' };
+        return throwError(errInfo);
+      })).subscribe((response) => {
+        console.log('response ', response);
+        this.identifyFace(response);
+      });
+    });
+  }
+
+  identifyFace(response) {
+    const request = {
+      url: `reghelper/face/identify`,
+      header: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        request: {
+          photo: response.result.content_url
+        }
+      }
+    };
+    this.configService.post(request).pipe(catchError(err => {
+      const errInfo = { errorMsg: 'Image upload failed' };
+      return throwError(errInfo);
+    })).subscribe((res) => {
+      this.openSuccessModal = true;
+      this.openErrorModal = false;
+      console.log('response ', res);
+    });
   }
 
   openWorkspace() {
     this.openSuccessModal = this.openSuccessModal;
-  }
-
-  getFileData() {
-    const id = UUID.UUID();
-    const request = {
-      url: 'private/content/v3/upload/url/' + id + '?idval=false',
-      data: {
-        request: {
-          content: {
-            fileName: `${id}.png`
-          }
-        }
-      }
-    };
-    this.configService.post(request).pipe().subscribe((response) => {
-      console.log('errrsrs response', response);
-      const signedURL = response.result.pre_signed_url;
-      const config = {
-        processData: false,
-        contentType: 'Asset',
-        headers: {
-          'x-ms-blob-type': 'BlockBlob'
-        }
-      };
-      this.uploadToBlob(signedURL, this.image, config).subscribe((data) => {
-        this.openSuccessModal = true;
-        this.openErrorModal = false;
-        const fileURL = signedURL.split('?')[0];
-      });
-    }, err => {
-      this.openSuccessModal = false;
-      this.openErrorModal = true;
-
-    });
-  }
-
-  uploadToBlob(signedURL, file, config): Observable<any>  {
-    return this.configService.put({url: signedURL, file, config}).pipe(catchError(err => {
-      this.openSuccessModal = false;
-      this.openErrorModal = true;
-      return throwError(err);
-    }), map(data => data));
   }
 
   closeModal() {
