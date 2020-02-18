@@ -44,19 +44,47 @@ export class InteractingVideoComponent implements OnInit, AfterViewInit {
      this.selVideo = que;
      this.showPreview = true;
      setTimeout(() => {
-      this.videoPlayerInstance = videojs(document.getElementById('video_player_id'), {}, () => {
-        // Player (this) is initialized and ready.
-          console.log('--------->');
+      this.videoPlayerInstance = videojs(document.getElementById('video_player_id'), {
+        controls: true,
+        autoplay: true,
+        preload: 'auto'
+      }, () => {
+         console.log('------> videojs initialiazed...');
       });
       this.videoPlayerInstance.markers({
-        markers: [
-           {
-              time: 16,
-              text: 'any'
-           },
-        ]
+        markerStyle: {
+          width: '7px',
+          'border-radius': '30%',
+          'background-color': 'red'
+       },
+       markerTip: {
+          display: true,
+          text: (marker) => {
+             return 'Break: ' + marker.text;
+          },
+          time: (marker) => {
+             return marker.time;
+          }
+       },
+       breakOverlay: {
+          display: false,
+          displayTime: 3,
+          style: {
+             width: '100%',
+             height: '20%',
+             'background-color': 'rgba(0,0,0,0.7)',
+             color: 'white',
+             'font-size': '17px'
+          },
+          text: (marker) => {
+             return 'Break overlay: ' + marker.overlayText;
+          }
+       },
+       onMarkerClick: (marker) => {},
+       onMarkerReached: (marker) => {},
+       markers: []
      });
-     }, 0);
+    }, 0);
   }
 
 }

@@ -1,12 +1,13 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import * as _ from 'lodash-es';
+import { ConfigService } from '../../services';
 
 @Component({
   selector: 'app-add-marker',
   templateUrl: './add-marker.component.html',
   styleUrls: ['./add-marker.component.scss']
 })
-export class AddMarkerComponent implements OnInit {
+export class AddMarkerComponent implements OnInit, AfterViewInit {
 
   markerList: Array<any> = [];
   mcqLayout: boolean;
@@ -15,63 +16,70 @@ export class AddMarkerComponent implements OnInit {
   queSelected: string;
   @Input() videoPlayerInstance: any;
   @Input() playerConfig: any;
-  constructor() { }
+  constructor(public configService: ConfigService) { }
 
   ngOnInit() {
+    const option = {
+      url: '/content/v1/read/' + this.playerConfig.identifier,
+    };
+    this.configService.get(option).subscribe((res) => {
+      if (res.result.content.markerList) {
+      this.markerList = JSON.parse(res.result.content.markerList);
+      }
+      console.log(this.markerList);
+    });
+
   }
 
-  // ngAfterViewInit() {
-  //   setTimeout(() => {
-  //     this.videoPlayerInstance =
-  //   }, 1000);
-  // }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      // tslint:disable-next-line:no-unused-expression
+      Boolean(this.markerList.length) ? this.videoPlayerInstance.markers.add(this.markerList) : null ;
+    }, 1000);
+  }
 
   getQueData() {
     this.addMarker({questionData: _.find(this.questionList, (obj) => obj.id === this.queSelected)});
   }
 
   addMarker(data) {
-      // this.videoPlayerInstance.currentTime()
-    const markerData = {time: 9.0, ...data};
+    const markerData = {time: Math.floor(this.videoPlayerInstance.currentTime()), ...data};
     this.markerList.push(markerData);
     this.mcqLayout = false;
-    this.videoPlayerInstance.markers.add(this.markerList);
-    // this.updateContentMeta().subscribe((res) => {
-    //   this.videoPlayerInstance.markers.add(this.markerList);
-    //   console.log('sucessss');
-    //   }, (err) => {
-    //    console.log('errorr', err);
-    //   });
+    this.updateContentMeta().subscribe((res) => {
+      this.videoPlayerInstance.markers.add(this.markerList);
+      console.log('sucessss');
+      }, (err) => {
+       console.log('errorr', err);
+      });
   }
 
   updateContentMeta() {
-    // const option = {
-    //   url: this.configService.urlConFig.URLS.CONTENT.UPDATE + '/' + this.playerConfig.metadata.identifier,
-    //   data: {
-    //     'request': {
-    //       'content': {
-    //         versionKey: this.playerConfig.metadata.versionKey,
-    //         markerList: this.markerList
-    //       }
-    //     }
-    //   }
-    // };
-    // return this.actionService.patch(option);
+    const option = {
+      url: 'https://devcon.sunbirded.org/api/private/content/v3/update/' + this.playerConfig.identifier,
+      data: {
+        request: {
+          content: {
+            versionKey: this.playerConfig.versionKey,
+            markerList: this.markerList
+          }
+        }
+      }
+    };
+    return this.configService.patch(option);
   }
 
   deleteMarker(index) {
     const backUpMarkerList = this.markerList;
     this.markerList = _.filter(this.markerList, (obj, i) => i !== index);
-    this.videoPlayerInstance.markers.add(this.markerList);
-    // this.updateContentMeta().subscribe((res) => {
-    //   this.videoPlayerInstance.markers.add(this.markerList);
-    //   this.toasterService.success('Selected Marker is Removed');
-    //   console.log('Removed sucessss');
-    //   }, (err) => {
-    //    this.markerList = backUpMarkerList;
-    //    this.toasterService.error('Failed...Please Try Again');
-    //    console.log('errorr', err);
-    //   });
+    // this.videoPlayerInstance.markers.add(this.markerList);
+    this.updateContentMeta().subscribe((res) => {
+      this.videoPlayerInstance.markers.add(this.markerList);
+      console.log('Removed sucessss');
+      }, (err) => {
+       this.markerList = backUpMarkerList;
+       console.log('errorr', err);
+      });
   }
 
   onSelectBehaviour(e) {

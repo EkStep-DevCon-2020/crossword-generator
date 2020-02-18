@@ -62,4 +62,18 @@ export class ConfigService {
         return observableOf(data);
       }));
   }
+
+  patch(requestParam): Observable<any> {
+    const httpOptions: HttpOptions = {
+      headers: requestParam.header ?  this.getHeader(requestParam.header) : this.getHeader(),
+      params: requestParam.param
+    };
+    return this.http.patch(requestParam.url, requestParam.data, httpOptions).pipe(
+      mergeMap((data: any) => {
+        if (data.responseCode !== 'OK') {
+          return observableThrowError(data);
+        }
+        return observableOf(data);
+      }));
+  }
 }
