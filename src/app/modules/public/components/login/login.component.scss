@@ -1,13 +1,23 @@
 // @import "./fonts/noto/fonts.css";
 
 .login-bg{
-  background: linear-gradient(to right, rgb(211, 204, 227), rgb(233, 228, 240));;
-  height: 100vh;
-  position: relative;
+  background: linear-gradient(to right, #d3cce3, #e9e4f0);
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  overflow: auto;
   .main{
     max-width: 1280px;
     margin :0 auto;
     height: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 100%;
+    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     .logo-section{
       padding: 2em;
       display: flex;

@@ -149,6 +149,8 @@ filterWordsWithSpace(word) {
 }
 
 ngAfterViewInit() {
+  generate(10, entries);
+
 
 }
 
