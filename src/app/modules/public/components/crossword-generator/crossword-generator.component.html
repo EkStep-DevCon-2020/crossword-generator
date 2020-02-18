@@ -14,50 +14,57 @@
     <div class="show-settings">
       <h5>Show Settings</h5>
     </div>
-    <div class="ui input settings-input">
-      <input #cwRow (keyup.enter)="getRows(cwRow.value)" type="text" placeholder="Search...">
-    </div>
 
-    <div class="ui primary dropdown button settings-input" suiDropdown [(isOpen)]="isOpen" [isDisabled]="isDisabled">
-      <div class="text">{{category || 'Select Category'}}</div>
-      <i class="dropdown icon"></i>
-      <div class="menu" suiDropdownMenu>
-        <div *ngFor="let top of topic" class="item" (click)="onCategoryChange(top.type, top.rel);">{{top.type}}</div>
+    <div class="ui form input settings-input">
+      <div class="field">
+        <label>Enter grid size</label>
+        <input #cwRow (keyup.enter)="getRows(cwRow.value)" type="text" placeholder="10">
       </div>
     </div>
     <div class="ui settings-input">
-      <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
-      <button class="ui primary button" (click)="getRows(cwRow.value)">Regenerate</button>
+      <div class="ui dropdown secondary button" suiDropdown [(isOpen)]="isOpen" [isDisabled]="isDisabled">
+        <div class="text">{{category || 'Select Category'}}</div>
+        <i class="dropdown icon" style="background: none;"></i>
+        <div class="menu" suiDropdownMenu>
+          <div *ngFor="let top of topic" class="item" (click)="onCategoryChange(top.type, top.rel);">{{top.type}}</div>
+        </div>
+      </div>
     </div>
-    <div class="half_width">
-      <table id="clues">
-        <thead>
-          <tr>
-            <th>Across</th>
-            <th>Down</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <ul id="across">
-                <!-- <li *ngFor="let edge of filteredEdges">
-                  {{word}} - {{clue}}
-                </li> -->
-              </ul>
-            </td>
-            <td>
-              <ul id="down"></ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="ui settings-input" style="text-align: center;">
+      <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
+      <button class="ui primary button small" (click)="getRows(cwRow.value)">Regenerate</button>
+    </div>
+    <div class="clue-settings">
+      <div class="half_width">
+        <table id="clues">
+          <thead>
+            <tr>
+              <th>Across</th>
+              <th>Down</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ul class="across" id="across">
+                  <!-- <li *ngFor="let edge of filteredEdges">
+                    {{word}} - {{clue}}
+                  </li> -->
+                </ul>
+              </td>
+              <td>
+                <ul class="down" id="down"></ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
 <sui-dimmer class="inverted" [(isDimmed)]="segmentDimmed">
-  <div class="ui text loader">Enables loading screens!</div>
+  <div class="ui text loader">Fetching words!!!</div>
 </sui-dimmer>
 <!--
 <a href="#" id="copy" data-clipboard-target="#output">Copy JSON</a> -->

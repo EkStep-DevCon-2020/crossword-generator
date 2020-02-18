@@ -123,5 +123,8 @@ removeDuplicateWords(clue) {
   return Array.from(new Set(clue.split(','))).toString();
 }
 
+filterWordsWithSpace(word) {
+  return !word.includes(' ');
+}
 
 }
