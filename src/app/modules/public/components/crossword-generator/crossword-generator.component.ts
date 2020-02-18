@@ -62,6 +62,7 @@ export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
   getRows(val) {
     this.segmentDimmed = true;
     this.showEditButton = false;
+    this.category = this.category || 'animal';
     this.http.get(`${this.conceptNetAPI}${this.category}?rel=${this.relativeParam}&limit=100`).pipe(
       mergeMap((res: any) => {
         const results = res.edges;
@@ -148,6 +149,8 @@ filterWordsWithSpace(word) {
 }
 
 ngAfterViewInit() {
+  generate(10, entries);
+
 
 }
 

@@ -5,13 +5,13 @@
     </div>
     <div class="main-left-content">
       <div id="crossword"></div>
-      <div *ngFor="let edge of filteredEdges">
-        {{edge.word}} - {{edge.clue}}
-      </div>
       <div class="output-section">
         <div id="output">Output</div>
       </div>
-     </div>
+      <div *ngFor="let edge of filteredEdges">
+        {{edge.word}} - {{edge.clue}}
+      </div>
+    </div>
 
   </div>
   <div class="main-sidebar">
@@ -42,7 +42,7 @@
       <div class="half_width">
         <div class="ui form input settings-input">
           <div class="field">
-            <label>Clues</label> <button  *ngIf="showEditButton" (click)="editState()" class="ui mini active button">
+            <label>Clues</label> <button *ngIf="showEditButton" (click)="editState()" class="ui mini active button">
               <i *ngIf="editingClues" class="check icon" style="background: none;"></i>
               <i *ngIf="!editingClues" class="edit icon" style="background: none;"></i>
               {{editingClues ? 'Done' : 'Edit'}}
@@ -62,10 +62,11 @@
                 <ul class="across" id="across">
                   <li class="clue_list" *ngFor="let across of wordClues.across">
                     <span *ngIf="!editingClues">
-                     <b>{{across.position}}</b> {{across.clue}}
+                      <b>{{across.position}}</b> {{across.clue}}
                     </span>
                     <div *ngIf="editingClues" class="ui input">
-                      <b>{{across.position}}</b> <input type="text" value="{{across.clue}}"  (blur)="updateClue($event, across.id);">
+                      <b>{{across.position}}</b> <input type="text" value="{{across.clue}}"
+                        (blur)="updateClue($event, across.id);">
                     </div>
                   </li>
 
@@ -77,7 +78,7 @@
                     <span *ngIf="!editingClues">
                       <b>{{down.position}}</b> {{down.clue}}
                     </span>
-                    <div  *ngIf="editingClues" class="ui input">
+                    <div *ngIf="editingClues" class="ui input">
                       <b>{{down.position}}</b> <input type="text" value="{{down.clue}}">
                     </div>
                   </li>

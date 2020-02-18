@@ -402,7 +402,7 @@ var CrosswordUtils = {
 
               if(is_start_of_word) {
                   var img_url = CrosswordUtils.PATH_TO_PNGS_OF_NUMBERS + label + ".png";
-                  html.push("<td class='" + css_class + "' title='" + r + ", " + c + "' style=\"background-image:url('" + img_url + "')\">");
+                  html.push("<td class='" + css_class + "' title='" + r + ", " + c + "' style=\"background-image:url('" + img_url + "'); background-repeat:no-repeat\">");
                   label++;
               } else {
                   html.push("<td class='" + css_class + "' title='" + r + ", " + c + "'>");
