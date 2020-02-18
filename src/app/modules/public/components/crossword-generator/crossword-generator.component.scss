@@ -1,5 +1,7 @@
 .main-container {
     box-sizing: border-box;
+    height: 100%;
+    overflow: hidden;
 }
 
 .main-container .main-sidebar {
@@ -16,9 +18,11 @@
 .main-container .main-body {
     padding-right: 340px;
 }
-
+.header-title{
+    font-size: 1.5em;
+}
 .show-settings {
-    background-color: #ccc;
+    background: #f3f7fa;
     padding: 8px 16px;
     width: 100%;
 }
@@ -30,6 +34,9 @@
 .settings-input {
     width: 100%;
     padding: 16px;
+    .field{
+        width: 100%;
+    }
 }
 
 .clue-settings {
@@ -43,5 +50,26 @@
 
 
 .header {
-    padding: 16px;
+    padding: 8px 16px;
+    background: #f3f7fa;
+}
+.main-left-content{
+    height: calc(100vh - 42px);
+    overflow: auto;
+}
+.select-btn{
+    min-width: 100%;
+    width: 100%;
+    height: 32px;
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 0;
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid hsl(0, 0%, 60%);
+    line-height: 32px;
+    padding: 0 16px;
+    .text{
+        width: 90%;
+    }
 }

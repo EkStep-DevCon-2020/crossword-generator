@@ -3,11 +3,15 @@
     <div class="header">
       <h1 class="header-title">CrossWords</h1>
     </div>
-    <div id="crossword"></div>
-    <div *ngFor="let edge of filteredEdges">
-      {{edge.word}} - {{edge.clue}}
-    </div>
-    <div id="output">Output</div>
+    <div class="main-left-content">
+      <div id="crossword"></div>
+      <div *ngFor="let edge of filteredEdges">
+        {{edge.word}} - {{edge.clue}}
+      </div>
+      <div class="output-section">
+        <div id="output">Output</div>
+      </div>
+     </div>
 
   </div>
   <div class="main-sidebar">
@@ -22,7 +26,7 @@
       </div>
     </div>
     <div class="ui settings-input">
-      <div class="ui dropdown secondary button" suiDropdown [(isOpen)]="isOpen" [isDisabled]="isDisabled">
+      <div class="ui dropdown secondary button select-btn" suiDropdown [(isOpen)]="isOpen" [isDisabled]="isDisabled">
         <div class="text">{{category || 'Select Category'}}</div>
         <i class="dropdown icon" style="background: none;"></i>
         <div class="menu" suiDropdownMenu>
