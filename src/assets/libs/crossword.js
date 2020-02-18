@@ -6,6 +6,22 @@ function CrosswordCell(letter){
   // If a word hits this cell going in the "down" direction, this will be a CrosswordCellNode
   this.down = null;
 }
+var splitter = new GraphemeSplitter();
+
+
+function getWordLength(word) {
+    return splitter.countGraphemes(word);
+}
+
+function customCharAt(word, i) {
+    return splitter.splitGraphemes(word)[i];
+}
+
+function chars(word) {
+    return splitter.splitGraphemes(word);
+}
+
+
 
 // You can tell if the Node is the start of a word (which is needed if you want to number the cells)
 // and what word and clue it corresponds to (using the index)
@@ -61,9 +77,9 @@ this.height = GRID_ROWS;
           var c = Math.floor(grid[0].length / 2);
           var word_element = word_elements[0];
           if(start_dir == "across"){
-              c -= Math.floor(word_element.word.length/2);
+              c -= Math.floor(getWordLength(word_element.word)/2);
           } else {
-              r -= Math.floor(word_element.word.length/2);
+              r -= Math.floor(getWordLength(word_element.word)/2);
           }
 
           if(canPlaceWordAt(word_element.word, r, c, start_dir) !== false){
@@ -177,7 +193,7 @@ this.height = GRID_ROWS;
 
   // helper for placeWordAt();
   var addCellToGrid = function(word, index_of_word_in_input_list, index_of_char, r, c, direction){
-      var char = word.charAt(index_of_char);
+      var char = customCharAt(word, index_of_char)  // word.charAt(index_of_char);
       if(grid[r][c] == null){
           grid[r][c] = new CrosswordCell(char);
 
@@ -197,11 +213,11 @@ this.height = GRID_ROWS;
   // the next chars go to the right (across) or below (down), depending on the direction
   var placeWordAt = function(word, index_of_word_in_input_list, row, col, direction){
       if(direction == "across"){
-          for(var c = col, i = 0; c < col + word.length; c++, i++){
+          for(var c = col, i = 0; c < col + getWordLength(word); c++, i++){
               addCellToGrid(word, index_of_word_in_input_list, i, row, c, direction);
           }
       } else if(direction == "down"){
-          for(var r = row, i = 0; r < row + word.length; r++, i++){
+          for(var r = row, i = 0; r < row + getWordLength(word); r++, i++){
               addCellToGrid(word, index_of_word_in_input_list, i, r, col, direction);
           }
       } else {
@@ -230,26 +246,26 @@ this.height = GRID_ROWS;
 
       if(direction == "across"){
           // out of bounds (word too long)
-          if(col + word.length > grid[row].length) return false;
+          if(col + getWordLength(word) > grid[row].length) return false;
           // can't have a word directly to the left
           if(col - 1 >= 0 && grid[row][col - 1] != null) return false;
           // can't have word directly to the right
-          if(col + word.length < grid[row].length && grid[row][col+word.length] != null) return false;
+          if(col + getWordLength(word) < grid[row].length && grid[row][col+getWordLength(word)] != null) return false;
 
           // check the row above to make sure there isn't another word
           // running parallel. It is ok if there is a character above, only if
           // the character below it intersects with the current word
-          for(var r = row - 1, c = col, i = 0; r >= 0 && c < col + word.length; c++, i++){
+          for(var r = row - 1, c = col, i = 0; r >= 0 && c < col + getWordLength(word); c++, i++){
               var is_empty = grid[r][c] == null;
-              var is_intersection = grid[row][c] != null && grid[row][c]['char'] == word.charAt(i);
+              var is_intersection = grid[row][c] != null && grid[row][c]['char'] == customCharAt(word, i) // word.charAt(i);
               var can_place_here = is_empty || is_intersection;
               if(!can_place_here) return false;
           }
 
           // same deal as above, we just search in the row below the word
-          for(var r = row + 1, c = col, i = 0; r < grid.length && c < col + word.length; c++, i++){
+          for(var r = row + 1, c = col, i = 0; r < grid.length && c < col + getWordLength(word); c++, i++){
               var is_empty = grid[r][c] == null;
-              var is_intersection = grid[row][c] != null && grid[row][c]['char'] == word.charAt(i);
+              var is_intersection = grid[row][c] != null && grid[row][c]['char'] ==  customCharAt(word, i) // word.charAt(i);
               var can_place_here = is_empty || is_intersection;
               if(!can_place_here) return false;
           }
@@ -257,34 +273,34 @@ this.height = GRID_ROWS;
           // check to make sure we aren't overlapping a char (that doesn't match)
           // and get the count of intersections
           var intersections = 0;
-          for(var c = col, i = 0; c < col + word.length; c++, i++){
-              var result = canPlaceCharAt(word.charAt(i), row, c);
+          for(var c = col, i = 0; c < col + getWordLength(word); c++, i++){
+              var result = canPlaceCharAt(customCharAt(word, i), row, c);
               if(result === false) return false;
               intersections += result;
           }
       } else if(direction == "down"){
           // out of bounds
-          if(row + word.length > grid.length) return false;
+          if(row + getWordLength(word) > grid.length) return false;
           // can't have a word directly above
           if(row - 1 >= 0 && grid[row - 1][col] != null) return false;
           // can't have a word directly below
-          if(row + word.length < grid.length && grid[row+word.length][col] != null) return false;
+          if(row + getWordLength(word) < grid.length && grid[row+ getWordLength(word)][col] != null) return false;
 
           // check the column to the left to make sure there isn't another
           // word running parallel. It is ok if there is a character to the
           // left, only if the character to the right intersects with the
           // current word
-          for(var c = col - 1, r = row, i = 0; c >= 0 && r < row + word.length; r++, i++){
+          for(var c = col - 1, r = row, i = 0; c >= 0 && r < row + getWordLength(word); r++, i++){
               var is_empty = grid[r][c] == null;
-              var is_intersection = grid[r][col] != null && grid[r][col]['char'] == word.charAt(i);
+              var is_intersection = grid[r][col] != null && grid[r][col]['char'] ==  customCharAt(word, i) // word.charAt(i);
               var can_place_here = is_empty || is_intersection;
               if(!can_place_here) return false;
           }
 
           // same deal, but look at the column to the right
-          for(var c = col + 1, r = row, i = 0; r < row + word.length && c < grid[r].length; r++, i++){
+          for(var c = col + 1, r = row, i = 0; r < row + getWordLength(word) && c < grid[r].length; r++, i++){
               var is_empty = grid[r][c] == null;
-              var is_intersection = grid[r][col] != null && grid[r][col]['char'] == word.charAt(i);
+              var is_intersection = grid[r][col] != null && grid[r][col]['char'] == customCharAt(word, i) // word.charAt(i);
               var can_place_here = is_empty || is_intersection;
               if(!can_place_here) return false;
           }
@@ -292,7 +308,7 @@ this.height = GRID_ROWS;
           // check to make sure we aren't overlapping a char (that doesn't match)
           // and get the count of intersections
           var intersections = 0;
-          for(var r = row, i = 0; r < row + word.length; r++, i++){
+          for(var r = row, i = 0; r < row + getWordLength(word); r++, i++){
               var result = canPlaceCharAt(word.charAt(i, 1), r, col);
               if(result === false) return false;
               intersections += result;
@@ -310,8 +326,8 @@ this.height = GRID_ROWS;
   var findPositionForWord = function(word){
       // check the char_index for every letter, and see if we can put it there in a direction
       var bests = [];
-      for(var i = 0; i < word.length; i++){
-          var possible_locations_on_grid = char_index[word.charAt(i)];
+      for(var i = 0; i < getWordLength(word); i++){
+          var possible_locations_on_grid = char_index[customCharAt(word, i)] // char_index[word.charAt(i)];
           if(!possible_locations_on_grid) continue;
           for(var j = 0; j < possible_locations_on_grid.length; j++){
               var point = possible_locations_on_grid[j];
@@ -366,7 +382,7 @@ this.height = GRID_ROWS;
   var word_elements = [];
   for(var i = 0; i < words_in.length; i++){
 
-      if(words_in[i].length > GRID_COLS || words_in[i].length > GRID_ROWS){
+      if(getWordLength(words_in[i]) > GRID_COLS || getWordLength(words_in[i]) > GRID_ROWS){
           continue;
       }
 
@@ -375,7 +391,7 @@ this.height = GRID_ROWS;
 
   // I got this sorting idea from http://stackoverflow.com/questions/943113/algorithm-to-generate-a-crossword/1021800#1021800
   // seems to work well
-  word_elements.sort(function(a, b){ return b.word.length - a.word.length; });
+  word_elements.sort(function(a, b){ return getWordLength(b.word) - getWordLength(a.word); });
 }
 
 var CrosswordUtils = {

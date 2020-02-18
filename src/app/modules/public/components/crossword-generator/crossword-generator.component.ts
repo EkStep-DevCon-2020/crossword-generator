@@ -9,6 +9,7 @@ declare let entries: any;
 declare let globalCW: any;
 declare const addLegendToPage: any;
 declare const printJson: any;
+declare const hi_general: any;
 
 @Component({
   selector: 'app-crossword-generator',
@@ -149,9 +150,7 @@ filterWordsWithSpace(word) {
 }
 
 ngAfterViewInit() {
-  generate(10, entries);
-
-
+  generate(10, hi_general);
 }
 
 }
