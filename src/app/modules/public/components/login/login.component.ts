@@ -1,8 +1,11 @@
-import { ConfigService } from '../../services';
+import { ConfigService, TelemetryService } from '../../services';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
+
+const STALL_ID = 'creation_2';
+const IDEA_ID = 'crossword';
 
 @Component({
   selector: 'app-login',
@@ -28,9 +31,16 @@ export class LoginComponent implements OnInit {
     }
   };
 
-  constructor(private renderer: Renderer2, public configService: ConfigService) { }
+  constructor(private renderer: Renderer2,
+              public configService: ConfigService,
+              public telemetryServcie: TelemetryService) { }
 
   ngOnInit() {
+    this.telemetryServcie.initialize({
+      did: 'device1',
+      stallId: STALL_ID,
+      ideaId: IDEA_ID
+    });
   }
 
   startCamera() {
@@ -98,18 +108,15 @@ export class LoginComponent implements OnInit {
         }
       }
     };
-    this.configService.post(request).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image upload failed' };
-      return throwError(errInfo);
-    })).subscribe((res) => {
+    this.configService.post(request).pipe().subscribe((res) => {
+      const data = {
+        profileId: res.result.osid
+      };
+      this.telemetryServcie.visit(data);
       this.openSuccessModal = true;
       this.openErrorModal = false;
       console.log('response ', res);
     });
-  }
-
-  openWorkspace() {
-    this.openSuccessModal = this.openSuccessModal;
   }
 
   closeModal() {
