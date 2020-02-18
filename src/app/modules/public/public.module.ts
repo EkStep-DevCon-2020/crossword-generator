@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { PublicRoutingModule } from './public-routing.module';
 import {SuiDropdownModule, SuiDimmerModule} from 'ng2-semantic-ui';
+import { InteractingVideoComponent } from './components/interacting-video/interacting-video.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,6 @@ import {SuiDropdownModule, SuiDimmerModule} from 'ng2-semantic-ui';
     SuiDropdownModule,
     SuiDimmerModule
   ],
-  declarations: [LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent]
+  declarations: [LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent, InteractingVideoComponent]
 })
 export class PublicModule { }

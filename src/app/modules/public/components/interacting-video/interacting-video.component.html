@@ -1,0 +1,19 @@
+<div class="sb-card-container">
+
+    <div class="sb-card" *ngFor="let video of videoList">
+        <div class="sb-body">
+            <div class="sb-card-image mr-16">
+                <img src="assets/images/video-placeholder.jpg">
+              </div>
+          <div class="">
+            <div class="sb-title">{{video.name}}</div>
+            <div class="sb-description">status: {{video.status}}</div>
+          </div>
+          
+        </div>
+      </div>
+
+</div>
+
+<!-- <sb-library-cards-grid  [title]="key" *ngIf="videoList" [title]="key"
+      [contentList]="videoList" [maxCardCount]="5" [type]="'infinite_card_grid'" (cardClick)="collectionClickHandler($event)"></sb-library-cards-grid> -->

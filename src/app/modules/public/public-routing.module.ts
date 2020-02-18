@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent } from './components';
+import { InteractingVideoComponent } from './components/interacting-video/interacting-video.component';
 
 const routes: Routes = [{
   path: '', component: LoginComponent
@@ -10,6 +11,9 @@ const routes: Routes = [{
   },
   {
     path: 'cw', component: CrosswordGeneratorComponent
+  },
+  {
+    path: 'interactive-video', component: InteractingVideoComponent
   }
 ];
 
