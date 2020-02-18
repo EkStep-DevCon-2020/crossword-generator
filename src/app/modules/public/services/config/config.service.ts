@@ -1,11 +1,8 @@
 import { HttpOptions } from './httpOptions';
 import { of as observableOf, throwError as observableThrowError, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UUID } from 'angular2-uuid';
-import * as moment from 'moment';
 import * as _ from 'lodash-es';
 @Injectable({
   providedIn: 'root'

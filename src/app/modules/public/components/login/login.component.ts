@@ -109,4 +109,9 @@ export class LoginComponent implements OnInit {
       return throwError(err);
     }), map(data => data));
   }
+
+  closeModal() {
+    (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
+    this.startCamera();
+  }
 }
