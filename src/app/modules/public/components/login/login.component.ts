@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
   captureImage = false;
   qrCode = false;
   image: string;
+  camera;
   constraints = {
     video: {
       facingMode: 'environment',
@@ -44,7 +45,6 @@ export class LoginComponent implements OnInit {
   }
 
   startCamera() {
-    this.openErrorModal = false;
     if (!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
       navigator.mediaDevices.getUserMedia(this.constraints).then(this.attachVideo.bind(this)).catch(this.handleError);
     } else {
@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit {
   }
 
   attachVideo(stream) {
+    this.camera = stream.getTracks()[0];
     this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
     this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
       this.videoHeight = this.videoElement.nativeElement.videoHeight;
@@ -88,7 +89,9 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
+        this.camera.stop();
         return throwError(errInfo);
+
       })).subscribe((response) => {
         console.log('response ', response);
         this.identifyFace(response);
@@ -115,12 +118,10 @@ export class LoginComponent implements OnInit {
       this.telemetryServcie.visit(data);
       this.openSuccessModal = true;
       this.openErrorModal = false;
-      console.log('response ', res);
+      this.camera.stop();
+    }, err => {
+      this.openErrorModal = true;
+      this.camera.stop();
     });
-  }
-
-  closeModal() {
-    (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
-    this.startCamera();
   }
 }
