@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit {
     this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
     this.image = this.canvas.nativeElement.toDataURL('image/png');
+    this.camera.stop();
     this.uploadImage();
   }
 
