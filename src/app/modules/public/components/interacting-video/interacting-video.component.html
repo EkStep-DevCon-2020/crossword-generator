@@ -16,14 +16,24 @@
 </div>
 
 <div *ngIf="showPreview">
-<video 
-   *ngIf="selVideo.artifactUrl" 
-   id="video_player_id"
-   class="video-js vjs-big-play-centered"
-   controls 
-   preload="auto">
-   <source src="{{selVideo.artifactUrl}}" type="video/mp4">
- </video> 
+<div class="video-container">
+  <div class="video-preview">
+    <div class="video-title"> Practice QuestionSet VSAa
+      <h5 class="ui right floated basic icon circular button  mouse-pointer"><i class="ui remove icon"></i></h5>  
+    </div>
+    <video 
+     *ngIf="selVideo.artifactUrl" 
+     id="video_player_id"
+     class="video-js vjs-big-play-centered"
+     controls 
+     preload="auto">
+     <source src="{{selVideo.artifactUrl}}" type="video/mp4">
+   </video>
+  </div>
+ <div class="video-content-data">
+  <app-add-marker [videoPlayerInstance]='videoPlayerInstance'></app-add-marker>
+ </div>
+</div> 
 
- <app-add-marker [videoPlayerInstance]='videoPlayerInstance'></app-add-marker>
+
 </div>
