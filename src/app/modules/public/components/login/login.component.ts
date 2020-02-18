@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { UUID } from 'angular2-uuid';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const STALL_ID = 'creation_2';
 const IDEA_ID = 'crossword';
@@ -21,6 +22,8 @@ export class LoginComponent implements OnInit {
   openSuccessModal = false;
   openErrorModal = false;
   captureImage = false;
+  visitorid = '';
+  name = '';
   qrCode = false;
   image: string;
   camera;
@@ -34,7 +37,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
-              public telemetryServcie: TelemetryService) { }
+              public telemetryServcie: TelemetryService,
+              public router: Router) { }
 
   ngOnInit() {
     this.telemetryServcie.initialize({
@@ -118,10 +122,52 @@ export class LoginComponent implements OnInit {
       this.telemetryServcie.visit(data);
       this.openSuccessModal = true;
       this.openErrorModal = false;
-      this.camera.stop();
-    }, err => {
-      this.openErrorModal = true;
-      this.camera.stop();
+      this.name = res.result.name;
+      console.log('response ', res);
     });
+  }
+
+  getUserDtailsByVisitorId() {
+    if (this.visitorid) {
+      const request = {
+        url: `reg/search`,
+        header: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          request: {
+            entityType: ['Visitor'],
+            filters: {
+              code: {
+                eq : this.visitorid
+              }
+            }
+          }
+        }
+      };
+      this.configService.post(request).pipe().subscribe((res) => {
+        if (res.result.Visitor) {
+          console.log('response ', res.result.Visitor[0]);
+          const data = {
+            profileId: res.result.Visitor[0].osid
+          };
+          this.telemetryServcie.visit(data);
+          this.openSuccessModal = true;
+          this.openErrorModal = false;
+          this.name = res.result.Visitor[0].name;
+        }
+      });
+
+    }
+  }
+
+  gotoWorkspace() {
+    // this.closeModal();
+    this.router.navigate(['/workspace']);
+  }
+
+  closeModal() {
+    (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
+    this.startCamera();
   }
 }
