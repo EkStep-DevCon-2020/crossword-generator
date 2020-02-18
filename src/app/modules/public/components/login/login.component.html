@@ -62,8 +62,7 @@
                         COMES HERE. Please confirm and
                         continue to create your content.</div>
                 </div>
-                <a href="/create" class="sb-btn sb-btn-secondary sb-btn-normal"
-                    (click)="openErrorModal = false;">CONFIRM</a>
+                <a [routerLink]="'/content'" class="sb-btn sb-btn-secondary sb-btn-normal">CONFIRM</a>
             </div>
             <!-- failed message modal content -->
             <div class="status-content" *ngIf="openErrorModal">
@@ -76,7 +75,7 @@
                         again or continue with QR Code.
                     </div>
                 </div>
-                <a type="button" class="sb-btn sb-btn-normal close-btn" (click)="closeModal()">CLOSE</a>
+                <a type="button" class="sb-btn sb-btn-normal close-btn" (click)="openErrorModal=false;captureImage=false">CLOSE</a>
             </div>
         </div>
     </div>
