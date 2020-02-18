@@ -41,8 +41,19 @@
     <div class="ui input settings-input">
       <input #cwRow (keyup.enter)="getRows(cwRow.value)" type="text" placeholder="Search...">
     </div>
-    <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
-    <button class="ui primary button" (click)="getRows(cwRow.value)">Regenerate</button>
+
+    <div class="ui primary dropdown button settings-input" suiDropdown [(isOpen)]="isOpen" [isDisabled]="isDisabled">
+      <div class="text">Dropdown</div>
+      <i class="dropdown icon"></i>
+      <div class="menu" suiDropdownMenu>
+        <div class="item">Item 1</div>
+        <div class="item">Item 4</div>
+      </div>
+    </div>
+    <div class="ui settings-input">
+      <!-- (blur)="getRows(cwRow.value); cwRow.value=''" -->
+      <button class="ui primary button" (click)="getRows(cwRow.value)">Regenerate</button>
+    </div>
   </div>
 </div>
 <!--
