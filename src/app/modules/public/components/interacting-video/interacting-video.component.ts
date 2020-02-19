@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ConfigService } from '../../services';
+import * as _ from 'lodash-es';
 declare var videojs: any;
 @Component({
   selector: 'app-interacting-video',
@@ -8,7 +9,7 @@ declare var videojs: any;
 })
 export class InteractingVideoComponent implements OnInit, AfterViewInit {
 
-  videoList: Array<any>;
+  videoList: Array<any> = [];
   selVideo: any;
   showPreview: boolean;
   videoPlayerInstance: any;
@@ -24,13 +25,24 @@ export class InteractingVideoComponent implements OnInit, AfterViewInit {
           request: {
                filters: {
                  createdBy: 'interaction_videos',
-                  status: ['Draft']
+                  status: ['Draft', 'Live']
                }
            }
           }
        };
     this.configService.post(request).subscribe((res) => {
-      this.videoList = res.result.content;
+      // tslint:disable-next-line:variable-name
+      const group_arr = _.groupBy(res.result.content, 'identifier');
+      _.forEach(group_arr, (val) => {
+        if (val.length > 1) {
+          const ab = _.find(val, (v) => {
+            return v.status === 'Draft';
+          });
+          this.videoList.push(ab);
+        } else {
+          this.videoList.push(val[0]);
+        }
+      });
     }, (err) => {
 
     });
@@ -43,6 +55,7 @@ export class InteractingVideoComponent implements OnInit, AfterViewInit {
   clickHandler(que) {
      this.selVideo = que;
      this.showPreview = true;
+     this.videoList = [];
      setTimeout(() => {
       this.videoPlayerInstance = videojs(document.getElementById('video_player_id'), {
         controls: true,
@@ -60,11 +73,11 @@ export class InteractingVideoComponent implements OnInit, AfterViewInit {
        markerTip: {
           display: true,
           text: (marker) => {
-             return 'Break: ' + marker.text;
-          },
-          time: (marker) => {
-             return marker.time;
+             return 'Break: ' + marker.time;
           }
+          // time: (marker) => {
+          //    return marker.time;
+          // }
        },
        breakOverlay: {
           display: false,

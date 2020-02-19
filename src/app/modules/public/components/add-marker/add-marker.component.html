@@ -1,79 +1,104 @@
 <div>
-  <button *ngIf="!mcqLayout" (click)="mcqLayout = true" class="sb-btn sb-btn-normal sb-btn-primary">Add Marker</button>
+ 
+  <div class="add-icon">
+    <button *ngIf="!mcqLayout" (click)="mcqLayout = true" class="sb-btn sb-btn-normal sb-btn-primary">
+      <i class="plus icon cursor-pointer"></i> 
+  
+      Add Marker</button>
+      <button *ngIf="!mcqLayout" (click)="removeAll()" class="sb-btn sb-btn-normal sb-btn-primary">
+        Remove All</button>
+        <button *ngIf="!mcqLayout" (click)="publishContent()" class="sb-btn sb-btn-normal sb-btn-primary">
+          Publish</button>
+  </div>
 
-  <sui-modal *ngIf="mcqLayout" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-[size]="'normal'" class="sb-modal" appBodyScroll (dismissed)="mcqLayout = false" #modal>
-<div class="sb-modal-header">
-  Select Question
-</div>
-<!-- Selection of Layout in modal -->
-<div class="sb-modal-content sb-chapterlist-modal">
+  <sui-modal *ngIf="mcqLayout" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
+    class="sb-modal" appBodyScroll (dismissed)="mcqLayout = false; selectedQuestions = []" #modal>
+    <div class="sb-modal-header">
+      Select Question
+    </div>
+    <!-- Selection of Layout in modal -->
+    <div class="sb-modal-content sb-chapterlist-modal">
 
-  <sui-accordion class="styled fluid sb-accordion sb-chapterlist-accordion" [closeOthers]="true">
-    <div *ngFor="let question of questionList">
-    <sui-accordion-panel [isOpen]="false">
-      <div title class="sb-accordion-title d-flex flex-ai-center">
-        <i class="chevron down icon mr-16"></i>
-        <div class="item d-flex flex-ai-center cursor-pointer width-100">
-          <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100">
-            <input (click)="onSelectBehaviour($event)" type="radio" name="mainUnit" (click)="showMoveButton = true" id="{{question.id}}" [(ngModel)] = "queSelected" value="{{question.id}}">
-            <label for="{{question.id}}">{{question.que}}</label>
+      <div class="question-section" *ngFor="let question of questionList">
+        <div class="question-list">
+          <div class="title">
+            {{question.que}}
+          </div>
+          <div class="select-box">
+            <div class="ui checkbox">
+              <input type="checkbox" data-toggle="toggle" name="{{question.id}}" (click)="showMoveButton = true; questionClickHandler(question.id); onSelectBehaviour($event)" value="{{question.id}}" 
+              [checked]="questionsSelectedd"
+              (change)="onchangeCheckbox(questionsSelectedd)">
+
+              <label></label>
+            </div>
           </div>
         </div>
       </div>
-      <div content id="questionset">
-        <div class="chapter-lists level1">
-          <div class='mcq-vertical cheveron-helper'>
-            <div class='mcq-title'>
-                <p>{{question.que}}</p>
-            </div>
-            <div class='mcq-options'>
-                <div *ngFor="let option of question.options; let i = index" value=i class='mcq-option' [ngClass]="{'mcq-options-select': onClickIndex === i}" (click)="evaluateQuestion(i)">
-                  <p>{{option}}</p>
-                </div>
-            </div>
-        </div>
-          
-        </div>
-      </div>
-    </sui-accordion-panel>
-    </div>
-  </sui-accordion>
-</div>
 
-<!-- Selection of Question in modal -->
-<!-- " -->
-<div class="sb-modal-actions">
-  <button class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn sb-btn-primary': showMoveButton, 'sb-btn-disabled': !showMoveButton}" (click)="getQueData()">Done</button>
-</div>
+    </div>
+
+    <!-- Selection of Question in modal -->
+    <!-- " -->
+    
+    <div class="sb-modal-actions">
+      <button class="sb-btn sb-btn-normal"
+        [ngClass]="{'sb-btn sb-btn-primary': showMoveButton, 'sb-btn sb-btn-disabled': !showMoveButton}"
+        (click)="addMarker()">Done</button>
+    </div>
+  </sui-modal>
+
+  <sui-modal *ngIf="showMessageModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+  [size]="'normal'" class="sb-modal" appBodyScroll
+  (dismissed)="showMessageModal = false" #modal>
+  <div class="sb-modal-header">
+    Content Published Successfuly...
+  </div>
+  <!-- <div class="sb-modal-content">
+      <div class="sb-publish-content">
+        <div class="review-modal-list"> -->
+          <!-- <ol class="list">
+            <li class="pb-8">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled </li>
+            <li class="pb-8">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled </li>
+            <li class="pb-8">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled </li>
+          </ol> -->
+      <!-- </div>
+      </div>
+  </div> -->
+  <!-- <div class="sb-modal-actions">
+    <button type="button" class="sb-btn sb-btn-normal sb-btn-primary"> Continue </button>
+  </div> -->
 </sui-modal>
 
-<div class="sb-table-container">
-  <table class="sb-table sb-table-striped sb-table-sortable sb-table-fixed">
-    <thead class="sb-table-header sb-table-thead-gray">
-      <tr>
-        <th >S No.</th>
-        <th >Time (sec)</th>
-        <th >Question</th>
-        <th >Action</th>
-      </tr>
-    </thead>
-    <tbody class="sb-table-body">
-      <tr *ngFor="let marker of markerList; let i = index;">
-        <td data-label="serial">{{i+1}}</td>
-        <td data-label="time">{{marker.time}}</td>
-        <td data-label="question">{{marker.questionData.que}}</td>
-        <td data-label="action">
-          <button class="sb-btn sb-btn-normal sb-btn-error" (click)="deleteMarker(i)"><i class="trash alternate icon"></i>Delete</button></td>
-      </tr>
-      <!-- <tr>
+  <div class="sb-table-container">
+    <table class="ui single line sortable upForReviewTable table">
+      <thead>
+        <tr>
+          <th class="two wide UpReviewTableHeader sorted bl-0"> S No. </th>
+          <th class="four wide UpReviewTableHeader sorted bl-0">Time (sec) </th>
+          <th class="four wide UpReviewTableHeader sorted bl-0"> Question Count</th>
+          <!-- <th class="two wide UpReviewTableHeader sorted bl-0"> Action </th> -->
+        </tr>
+      </thead>
+      <tbody class="sb-table-body" *ngIf="markerList.length > 0">
+        <tr *ngFor="let marker of markerList; let i = index;">
+          <td data-label="serial">{{i+1}}</td>
+          <td data-label="time">{{marker.time}}</td>
+          <td data-label="question">
+            {{marker.questionData.length}}
+            <!-- <div *ngFor = "let sampleQue of marker.questionData">
+            Question {{sampleQue.id}}
+            </div> -->
+          </td>
+          <!-- <td data-label="action"><i class="trash alternate icon cursor-pointer" title="delete" (click)="deleteMarker(i)"></i></td> -->
+        </tr>
+        <!-- <tr>
           <td data-label="Name">177402120</td>
           <td data-label="Age">Course User 100</td>
           <td data-label="Age">Sunbird QA Tenant</td>
           <td data-label="Age">30/07/19</td>
       </tr> -->
-    </tbody>
-  </table>
-</div>
-
+      </tbody>
+    </table>
+  </div>
 </div>

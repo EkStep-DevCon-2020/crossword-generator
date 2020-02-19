@@ -171,6 +171,7 @@
     border-color: #024f9d;
     background-color: #024f9d;
     color: #fff;
+    margin-left: 3%;
 }
 
 .sb-btn.sb-btn-secondary {
@@ -393,4 +394,92 @@
     .sb-question-dsp-container .sb-question-content .sb-question-content-card, #questionset .mcq-horizontal .mcq-options .mcq-option p, #questionset .mcq-vertical .mcq-options .mcq-option p, #questionset .mcq-grid .mcq-options .mcq-option p {
         font-size:var(--fontXL);
     }
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.add-icon{
+    margin-bottom: 1em;
+    text-align: right;
+}
+.sb-chapterlist-modal{
+    padding: 1em;
+}
+.sb-modal-header{
+    padding: 1em;
+    border-bottom: 1px solid #ccc
+}
+.question-list{
+    padding: 0.5em 0; 
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.question-list:last-child{
+    border-bottom: 0px solid #ccc;
+}
+.question-list .title{
+    width:90%;
+}
+.question-list .select-box{
+    width: 10%;
+    text-align: right;
+}
+.sb-modal-actions{
+    padding: 0.5em 1em;
+    display: flex;
+    border-top: 1px solid #ccc;
+    justify-content: flex-end;
+}
+.sb-btn-normal {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+.sb-btn-primary {
+    background-color: #024F9D;
+    border-color: #024F9D;
+    color:#fff;
+}
+ .sb-btn {
+    border-radius: 0.25rem;
+    white-space: nowrap;
+    user-select: none;
+    outline: 0;
+    display: inline-block;
+    cursor: pointer;
+    min-width: 4rem;
+    line-height: 1.15;
+    text-transform: capitalize;
+    text-decoration: none;
+}
+.sb-checkbox input[type=checkbox] {
+    outline: 0;
+    opacity: 0;
+}
+.sb-checkbox input[type=checkbox], .sb-checkbox input[type=radio], .sb-radio-btn-checkbox input[type=checkbox], .sb-radio-btn-checkbox input[type=radio] {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 3;
+    width: 1rem;
+    height: 1rem;
+}
+[type=checkbox], [type=radio] {
+    box-sizing: border-box;
+    padding: 0;
+}
+.sb-checkbox, .sb-radio-btn-checkbox {
+    position: relative;
+    display: block;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    outline: 0;
+    font-style: normal;
+    line-height: 1rem;
+    min-height: 1rem;
+    min-width: 1rem;
 }

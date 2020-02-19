@@ -16,14 +16,26 @@
 </div>
 
 <div *ngIf="showPreview">
-<video 
-   *ngIf="selVideo.artifactUrl" 
-   id="video_player_id"
-   class="video-js vjs-big-play-centered"
-   controls 
-   preload="auto">
-   <source src="{{selVideo.artifactUrl}}" type="video/mp4">
- </video> 
+<div class="video-container">
+  <div class="video-preview">
+    <div class="video-title"> {{selVideo.name}}
+      <h5 class="ui right floated basic icon circular button  mouse-pointer"><i class="ui remove icon" (click)="showPreview = false;videoList = []; ngOnInit()"></i></h5>  
+    </div>
+    <video 
+     *ngIf="selVideo.artifactUrl" 
+     id="video_player_id"
+     class="video-js vjs-big-play-centered"
+     controls 
+     preload="auto">
+     <!-- {{selVideo.artifactUrl}} -->
+     <source src="assets/Video/{{selVideo.identifier}}.mp4" type="video/mp4">
+   </video>
+  </div>
+ <div class="video-content-data">
+  <app-add-marker [videoPlayerInstance]='videoPlayerInstance' [playerConfig]='selVideo' (refreshEvent)="ngOnInit(); showPreview = false"></app-add-marker>
+ </div>
+</div> 
 
- <app-add-marker [videoPlayerInstance]='videoPlayerInstance' [playerConfig]='selVideo'></app-add-marker>
+
+ <!-- <app-add-marker [videoPlayerInstance]='videoPlayerInstance' [playerConfig]='selVideo'></app-add-marker> -->
 </div>

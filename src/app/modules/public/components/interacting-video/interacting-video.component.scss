@@ -28,7 +28,7 @@
     }
     
     .sb-card {
-    min-height: 8rem;
+    min-height: 6rem;
     margin: 1.5rem 1.5rem 1.5rem 0;
     max-width: 18.25rem;
     border: 0.5px solid #F2F2F2;
@@ -36,6 +36,8 @@
     border-radius: 0.25rem;
     background: #fff;
     padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
     }
     
     .sb-title {
@@ -49,4 +51,30 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 4;
+    }
+    .video-container{
+        width: 100%;
+        display: flex;
+        .video-title{
+            font-weight: 700;
+            font-size: 1.375em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 0 0.5em 0;
+        }
+        .video-preview{
+            width: 60%;
+            padding: 0 2em;
+        }
+        #video_player_id{
+            margin: 0 auto;
+            width: 100%;
+            height: 400px;
+            box-shadow: 0 0 0 1px #d4d4d5, 0 2px 4px 0 rgba(34, 36, 38, 0.12), 0 2px 10px 0 rgba(34, 36, 38, 0.15);
+        }
+    }
+    .video-content-data{
+        width: 40%;
+        margin: 1em 3em 1em 1em;
     }
