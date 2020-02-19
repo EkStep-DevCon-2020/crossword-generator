@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   camera;
   constraints = {
     video: {
-      facingMode: 'environment',
+      facingMode: 'user',
       width: { ideal: 300 },
       height: { ideal: 300 }
     }
