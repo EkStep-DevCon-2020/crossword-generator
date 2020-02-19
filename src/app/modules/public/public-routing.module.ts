@@ -12,7 +12,7 @@ const routes: Routes = [{
     path: 'cw', component: CrosswordGeneratorComponent
   },
   {
-    path: 'content/review/:contentId', component: ContentReviewComponent
+    path: 'review/:contentId', component: ContentReviewComponent
   }
 ];
 

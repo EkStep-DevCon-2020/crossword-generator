@@ -3,7 +3,7 @@
 <div class="review-container">
   <div class="review-container-body">
     <div class="review-container-details">
-      <div class="action-item">
+      <div class="action-item" *ngIf="checksPassed !== 5 && checksFailed !== 5">
         <div class="action-item-icon action-item-icon-status
           action-item-icon-status-warning">
 
@@ -17,7 +17,7 @@
           </span>
         </div>
       </div>
-      <div class="action-item">
+      <div class="action-item" *ngIf="checksPassed > 0">
         <div class="action-item-icon action-item-icon-status
           action-item-icon-status-success">
           <svg class="octicon octicon-check" viewBox="0 0 12 16" version="1.1" width="12" height="16"
@@ -27,7 +27,7 @@
           </svg>
         </div>
         <div class="">
-          <h3 class="status-heading text-green">All checks have passed</h3>
+          <h3 class="status-heading text-green">{{checksPassed}} checks have passed</h3>
           <span class="status-meta">
             {{checksPassed}} successful checks
           </span>
@@ -35,7 +35,7 @@
       </div>
       <div class="action-item">
         <div class="action-item-icon action-item-icon-status
-          action-item-icon-status-error">
+          action-item-icon-status-error" *ngIf="checksFailed > 0">
           <svg class="octicon octicon-x" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true">
             <path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6
               9.48l-3.75 3.75-1.48-1.48L4.52 8
@@ -43,8 +43,8 @@
             </path>
           </svg>
         </div>
-        <div class="">
-          <h3 class="status-heading text-red">All checks have failed</h3>
+        <div class=""  *ngIf="checksFailed > 0">
+          <h3 class="status-heading text-red">{{checksFailed}} checks have failed</h3>
           <span class="status-meta">
             {{checksFailed}} errored and {{checksPending}} failing checks
           </span>
