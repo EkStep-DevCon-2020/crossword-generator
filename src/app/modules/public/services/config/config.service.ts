@@ -71,7 +71,6 @@ export class ConfigService {
           filters: {
             objectType: 'Content',
             status: ['Review', 'Draft', 'Live'],
-            // createdBy: 'gauraw'
           },
           exists: ['cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
           fields: ['identifier', 'name', 'description', 'status', 'contentType',
