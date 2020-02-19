@@ -17,6 +17,7 @@ export class ContentReviewComponent implements OnInit {
   checksPassed = 0;
   checksPending = 0;
   showResult = true;
+  showLanguage = true;
   title;
 
   constructor(public config: ConfigService, public activatedRoute: ActivatedRoute, public location: Location) { }

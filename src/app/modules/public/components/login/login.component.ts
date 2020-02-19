@@ -151,7 +151,7 @@ export class LoginComponent implements OnInit {
         }
       };
       this.configService.post(request).pipe().subscribe((res) => {
-        if (res.result.Visitor) {
+        if (res.result.Visitor.length > 0) {
           console.log('response ', res.result.Visitor[0]);
           const data = {
             profileId: res.result.Visitor[0].osid
@@ -160,6 +160,8 @@ export class LoginComponent implements OnInit {
           this.openSuccessModal = true;
           this.openErrorModal = false;
           this.name = res.result.Visitor[0].name;
+        } else {
+          this.openErrorModal = true;
         }
       });
 

@@ -71,20 +71,25 @@
           <div class="text-gray col-10 truncate truncate-target">
             <strong class="text-emphasized">
               {{(data?.name).charAt(0).toUpperCase() +
-              (data?.name).slice(1).toLowerCase()}}
+              (data?.name).slice(1)}}
             </strong>
-            <span *ngIf="data?.name === 'Suggested Tags'">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1).toLowerCase()}}: {{data?.result}}</span>
-            <span *ngIf="data?.name === 'Suggested Keywords'">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1).toLowerCase()}}: {{data?.result}}</span>
-            <span *ngIf="data?.name === 'Language Analysis'">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1).toLowerCase()}} analysis is
+            <span *ngIf="data?.name === 'Suggested Tags' && data?.result">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1)}}: {{data?.result}}</span>
+            <span *ngIf="data?.name === 'Suggested Keywords' && data?.result">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1)}}: {{data?.result}}</span>
+            <span *ngIf="data?.name === 'Language Analysis' && data?.status">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1)}} is
               {{data?.status}}</span>
-            <span *ngIf="data?.name === 'Translation'">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1).toLowerCase()}} analysis is
-              {{data?.status}}</span>
-            <span *ngIf="data?.name === 'Content quality'">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1).toLowerCase()}} check is {{data?.status}}</span>
+            <span *ngIf="data?.name === 'Translation' && data?.status">
+              <span *ngIf="data?.status !=='Passed'">
+                Translation Unavailable
+              </span>
+              <span *ngIf="data?.status === 'Passed'">
+                This content is translated to Hindi and Translated ID: {{data?.result?.translated_id}}
+              </span>
+            </span>
+            <span *ngIf="data?.name === 'Content quality' && data?.status">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1)}} check is {{data?.status}}</span>
             <div class="" *ngIf="(data.type==='quality') && showResult">
               <div class="content-status" *ngFor="let dataResult of
                 data.result">
@@ -103,40 +108,46 @@
                     {{dataResult?.result?.percentile}}
                   </span>
                   <span *ngIf="dataResult?.name === 'Image'">
-                    {{dataResult?.name}} quality {{dataResult?.result}}
+                    {{dataResult?.name}} quality {{dataResult?.status}}
+                    <span *ngIf="dataResult?.result && dataResult?.status === 'Failed'"
+                    >Due to:{{dataResult?.result}} </span>
                   </span>
                   <span *ngIf="dataResult?.name === 'Profanity'">
-                    {{dataResult?.name}} check {{dataResult?.result}}
+                    {{dataResult?.name}} check is {{dataResult?.status}} <span *ngIf="dataResult?.result && dataResult?.status === 'Failed'">Due to the presence of: {{dataResult?.result}}</span>
                   </span>
                   <span *ngIf="dataResult?.name === 'Size'">
                     {{dataResult?.name}} is {{dataResult?.result || 0}}
                   </span>
-
-
                 </div>
               </div>
             </div>
 
-            <div class="" *ngIf="(data.type==='ln_analysis') && showResult">
+            <div class="add-padding" *ngIf="(data.type==='ln_analysis') && showLanguage">
               <div class="content-status" *ngFor="let lnResult of data.result |
                 keyvalue">
                 <div class="text-gray col-10 truncate truncate-target">
-                  <strong class="text-emphasized">
-                    {{(lnResult?.key).charAt(0).toUpperCase() +
-                    (lnResult?.key).slice(1).toLowerCase()}}
-                  </strong>
-                  <!-- <span *ngIf="lnResult?.key === 'totalWordCount'">
-                    : {{lnResult?.key}}
+                  <span *ngIf="lnResult?.key === 'totalWordCount'">
+                    <strong  class="text-emphasized"> Total Word Count:</strong>
+                    {{lnResult?.value || 0}}
                   </span>
                   <span *ngIf="lnResult?.key === 'nonThresholdVocabulary'">
-                   WordCount: {{lnResult?.key['wordCount'] | json}}
+                    <strong  class="text-emphasized"> No Threshold Vocabulary:  </strong>
+                   Word Count: {{lnResult?.value.wordCount}} with Percentage: {{lnResult?.value['%OfWords']}}%
                   </span>
                   <span *ngIf="lnResult?.key === 'thresholdVocabulary'">
-                    WordCount: {{lnResult?.key['wordCount'] | json}}
+                    <strong  class="text-emphasized"> Threshold Vocabulary: </strong>
+                    Word Count: {{lnResult?.value.wordCount}} with Percentage: {{lnResult?.value['%OfWords']}}%
                   </span>
-                  <span *ngIf="lnResult?.name === 'Size'">
-                    {{lnResult?.key}} is {{lnResult?.value}}
-                  </span> -->
+                  <span *ngIf="lnResult?.key === 'partsOfSpeech'">
+                    <strong  class="text-emphasized">  Parts Of Speech: </strong>
+                       Adjective: {{lnResult?.value.adjective}}, 
+                       Conjunction: {{lnResult?.value.conjunction}}, 
+                       Preposition: {{lnResult?.value.preposition}}, 
+                       Verb: {{lnResult?.value.verb}}, 
+                       Noun: {{lnResult?.value.noun}}, 
+                       Adverb: {{lnResult?.value.adverb}},
+                       Article: {{lnResult?.value.article}}
+                  </span>
 
 
                 </div>
@@ -147,12 +158,18 @@
           </div>
           <div class="d-flex col-2 flex-shrink-0">
             <span class="status-actions">Required</span> &nbsp;
-            <span *ngIf="data.type === 'quality' || data.type == 'ln_analysis'"
+            <span *ngIf="data.type === 'quality'"
               (click)="showResult=
               !showResult">
               <a *ngIf="showResult"> Hide details</a>
               <a *ngIf="!showResult"> Show details</a>
             </span>
+            <span *ngIf="data.type == 'ln_analysis'"
+            (click)="showLanguage=
+            !showLanguage">
+            <a *ngIf="showLanguage"> Hide details</a>
+            <a *ngIf="!showLanguage"> Show details</a>
+          </span>
           </div>
         </div>
       </div>
