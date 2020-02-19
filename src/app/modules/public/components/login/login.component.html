@@ -10,7 +10,7 @@
         </div>
         <div class="login-conatiner-main">
             <div class="scaner-section">
-                <div class="scaner" *ngIf="!qrCode && !captureImage">
+                <!-- <div class="scaner" *ngIf="!qrCode && !captureImage">
                     <img class="scanner-gif" src="./../../../../../assets/images/scaner.gif" alt="scaner">
                     <button type="button" class="capture-btn" id="myBtn"
                         (click)="startCamera();captureImage=!captureImage;">Capture</button>
@@ -18,9 +18,9 @@
                         <span class="seperator">OR</span>
                         <a (click)="qrCode= !qrCode">QR Code</a>
                     </div>
-                </div>
+                </div> -->
     
-                <div class="scaner" *ngIf="!qrCode && captureImage">
+                <div class="scaner" *ngIf="!qrCode">
                     <video #video class="vid" autoplay></video>
                     <canvas #canvas class="vid"></canvas>
                     <button type="button" class="capture-btn" id="myBtn" (click)="capture()">Capture</button>
@@ -30,7 +30,7 @@
                     </div>
                 </div>
     
-                <div class="qr-code" *ngIf="qrCode">
+                <!-- <div class="qr-code" *ngIf="qrCode">
                     <img src="./../../../../../assets/images/qr-code.svg" alt="QR Code">
                     <div class="input-container">
                         <input class="input-field" [(ngModel)]="visitorid" type="text" placeholder="Enter your QR Code" name="qr-code">
@@ -40,7 +40,7 @@
                         <span class="seperator">OR</span>
                         <a (click)="qrCode= !qrCode; startCamera();">Capture</a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
 </div>
 
 
-<div id="myModal" class="login-modal" *ngIf="openErrorModal || openSuccessModal">
+<!-- <div id="myModal" class="login-modal" *ngIf="openErrorModal || openSuccessModal">
     <div class="modal-content">
         <div class="modal-body">
             <div class="status-content" *ngIf="openSuccessModal">
@@ -65,7 +65,7 @@
                 <a class="sb-btn sb-btn-secondary sb-btn-normal"
                     (click)="gotoWorkspace();openErrorModal = false;">CONFIRM</a>
             </div>
-            <!-- failed message modal content -->
+            failed message modal content
             <div class="status-content" *ngIf="openErrorModal">
                 <img src="./../../../../../assets/images/failed.gif" alt="failed">
                 <div class="status-info">
@@ -80,4 +80,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

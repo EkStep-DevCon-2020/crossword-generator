@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
               public router: Router) { }
 
   ngOnInit() {
+    this.startCamera();
     this.telemetryService.initialize({
       did: 'device1',
       stallId: STALL_ID,
@@ -95,7 +96,7 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
-        this.camera.stop();
+        this.reCaptureImage();
         return throwError(errInfo);
 
       })).subscribe((response) => {
@@ -136,6 +137,7 @@ export class LoginComponent implements OnInit {
       }
 
     }, (err) => {
+      this.reCaptureImage();
       console.log('identifyFace err ', err);
       this.openSuccessModal = false;
       this.openErrorModal = true;
@@ -178,5 +180,14 @@ export class LoginComponent implements OnInit {
 
   gotoWorkspace() {
     this.router.navigate(['/workspace']);
+  }
+
+  reCaptureImage() {
+    setInterval(() => {
+     (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
+     setTimeout(() => {
+       this.capture();
+     }, 3000);
+    }, 60000);
   }
 }
