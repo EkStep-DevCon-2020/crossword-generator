@@ -1,5 +1,5 @@
 import { HttpOptions } from './httpOptions';
-import { of as observableOf, throwError as observableThrowError, Observable } from 'rxjs';
+import { of as observableOf, throwError as observableThrowError, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -76,4 +76,31 @@ export class ConfigService {
         return observableOf(data);
       }));
   }
+
+  searchContents(): Observable<any> {
+    const requestParam = {
+      url: 'composite/v1/search',
+      data: {
+        request : {
+          filters: {
+            objectType: 'Content',
+            status: ['Review', 'Draft', 'Live'],
+          },
+          exists: ['cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
+          fields: ['identifier', 'name', 'description', 'status', 'contentType',
+          'createdBy', 'appIcon', 'cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
+        }
+      }
+    };
+    return this.post(requestParam);
+  }
+
+  getCurationData(contents) {
+      const metaData = [];
+      _.forEach(contents, content => {
+        const data = _.pick(content, 'cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size');
+        metaData.push({identifier: content.identifier, metaData: data, name: content.name});
+      });
+      return metaData;
+    }
 }

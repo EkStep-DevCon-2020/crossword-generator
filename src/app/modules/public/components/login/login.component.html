@@ -33,8 +33,8 @@
                 <div class="qr-code" *ngIf="qrCode">
                     <img src="./../../../../../assets/images/qr-code.svg" alt="QR Code">
                     <div class="input-container">
-                        <input class="input-field" type="text" placeholder="Enter your QR Code" name="qr-code">
-                        <span class="icon"></span>
+                        <input class="input-field" [(ngModel)]="visitorid" type="text" placeholder="Enter your QR Code" name="qr-code">
+                        <span ngClass="" class="icon" (click)="getUserDtailsByVisitorId();"></span>
                     </div>
                     <div class="qrcode-link">
                         <span class="seperator">OR</span>
@@ -55,23 +55,16 @@
             <div class="status-content" *ngIf="openSuccessModal">
                 <img src="./../../../../../assets/images/check.gif" alt="checked">
                 <div class="status-info">
-                    <div class="title">
-                        Title comes here
-                    </div>
-                    <div class="status-msg"> You are recognized as Mr/Mrs. NAME
-                        COMES HERE. Please confirm and
+                    <div class="status-msg">Please confirm and
                         continue to create your content.</div>
                 </div>
                 <a href="/create" class="sb-btn sb-btn-secondary sb-btn-normal"
-                    (click)="openErrorModal = false;">CONFIRM</a>
+                    (click)="gotoWorkspace();openErrorModal = false;">CONFIRM</a>
             </div>
             <!-- failed message modal content -->
             <div class="status-content" *ngIf="openErrorModal">
                 <img src="./../../../../../assets/images/failed.gif" alt="failed">
                 <div class="status-info">
-                    <div class="title">
-                        Title comes here
-                    </div>
                     <div class="status-msg"> You are not recognized. Please try
                         again or continue with QR Code.
                     </div>

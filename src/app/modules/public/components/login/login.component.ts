@@ -3,9 +3,12 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { UUID } from 'angular2-uuid';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 const STALL_ID = 'STA1';
 const IDEA_ID = 'IDE4';
+const visitedProfiles = [];
 
 @Component({
   selector: 'app-login',
@@ -22,6 +25,8 @@ export class LoginComponent implements OnInit {
   openErrorModal = false;
   captureImage = false;
   qrCode = false;
+  visitorid = '';
+  name = '';
   image: string;
   constraints = {
     video: {
@@ -33,10 +38,11 @@ export class LoginComponent implements OnInit {
 
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
-              public telemetryServcie: TelemetryService) { }
+              public telemetryService: TelemetryService,
+              public router: Router) { }
 
   ngOnInit() {
-    this.telemetryServcie.initialize({
+    this.telemetryService.initialize({
       did: 'device1',
       stallId: STALL_ID,
       ideaId: IDEA_ID
@@ -98,7 +104,7 @@ export class LoginComponent implements OnInit {
 
   identifyFace(response) {
     const request = {
-      url: `reghelper/face/identify`,
+      url: `reghelper/face/identify/multiple`,
       header: {
         'Content-Type': 'application/json'
       },
@@ -109,14 +115,70 @@ export class LoginComponent implements OnInit {
       }
     };
     this.configService.post(request).pipe().subscribe((res) => {
-      const data = {
-        profileId: res.result.osid
-      };
-      this.telemetryServcie.visit(data);
-      this.openSuccessModal = true;
-      this.openErrorModal = false;
-      console.log('response ', res);
+      if (res.responseCode === 'CLIENT_ERROR') {
+        this.openSuccessModal = false;
+        this.openErrorModal = true;
+      }
+      if (res && res.result && res.result.osids && res.result.osids.length > 0) {
+        // tslint:disable-next-line:prefer-const
+        let that = this;
+        // tslint:disable-next-line:only-arrow-functions
+        res.result.osids.forEach(function(profileId) {
+          if (!visitedProfiles.includes(profileId)) {
+            visitedProfiles.push(profileId);
+            const data = {
+              profileId
+            };
+            that.telemetryService.visit(data);
+          } else {
+            console.log('Old visitor');
+          }
+        });
+        this.openSuccessModal = true;
+        this.openErrorModal = false;
+      } else {
+        this.openSuccessModal = false;
+        this.openErrorModal = true;
+      }
     });
+  }
+
+  getUserDtailsByVisitorId() {
+    if (this.visitorid) {
+      const request = {
+        url: `reg/search`,
+        header: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          request: {
+            entityType: ['Visitor'],
+            filters: {
+              code: {
+                eq : this.visitorid
+              }
+            }
+          }
+        }
+      };
+      this.configService.post(request).pipe().subscribe((res) => {
+        if (res.result.Visitor) {
+          console.log('response ', res.result.Visitor[0]);
+          const data = {
+            profileId: res.result.Visitor[0].osid
+          };
+          this.telemetryService.visit(data);
+          this.openSuccessModal = true;
+          this.openErrorModal = false;
+          this.name = res.result.Visitor[0].name;
+        }
+      });
+
+    }
+  }
+
+  gotoWorkspace() {
+    this.router.navigate(['/workspace']);
   }
 
   closeModal() {

@@ -9,6 +9,7 @@ import { InteractingVideoComponent } from './components/interacting-video/intera
 import { AddMarkerComponent } from './components/add-marker/add-marker.component';
 import { SuiTabsModule, SuiModule } from 'ng2-semantic-ui';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from './components/header/header/header.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { FormsModule } from '@angular/forms';
     SuiTabsModule,
     FormsModule
   ],
-  declarations: [LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent, InteractingVideoComponent, AddMarkerComponent]
+  // tslint:disable-next-line:max-line-length
+  declarations: [LoginComponent, CrosswordGeneratorComponent, WorkspaceComponent, InteractingVideoComponent, AddMarkerComponent, HeaderComponent]
 })
 export class PublicModule { }

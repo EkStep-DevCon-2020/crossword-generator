@@ -7,7 +7,7 @@ const routes: Routes = [{
   path: '', component: LoginComponent
   },
   {
-    path: 'create', component: WorkspaceComponent
+    path: 'workspace', component: WorkspaceComponent
   },
   {
     path: 'cw', component: CrosswordGeneratorComponent
