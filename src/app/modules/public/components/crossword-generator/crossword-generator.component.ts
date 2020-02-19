@@ -1,8 +1,22 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ConfigService } from '../../services';
 import { Subscription, of, throwError, Observable, Subject, forkJoin } from 'rxjs';
-import { map, mergeMap, first } from 'rxjs/operators';
+import { map, mergeMap, first, catchError } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { UUID } from 'angular2-uuid';
+// import path from 'path';
+// import * as path from 'path';
+// import * as fileURLToPath from 'url';
+
+// // tslint:disable-next-line:variable-name
+// const __filename = fileURLToPath(import.meta.url);
+// // tslint:disable-next-line:variable-name
+// const __dirname = path.dirname(__filename);
+
+
+// const __dirname = dirname(fileURLToPath(import.meta.url));
+
 declare const Crossword: any;
 declare const generate: any;
 declare let entries: any;
@@ -10,6 +24,8 @@ declare let globalCW: any;
 declare const addLegendToPage: any;
 declare const printJson: any;
 declare const hi_general: any;
+declare const finalPuzzle: any;
+// declare const __dirname;
 
 @Component({
   selector: 'app-crossword-generator',
@@ -53,7 +69,7 @@ export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
   ];
 
   public filteredEdges: any;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public configService: ConfigService) { }
 
   ngOnInit() {
     // this.getRows(10);
@@ -147,6 +163,50 @@ removeDuplicateWords(clue) {
 
 filterWordsWithSpace(word) {
   return !word.includes(' ');
+}
+
+createContent() {
+  // console.log(`${__dirname}`);
+  const headers = {
+    'Content-Type':  'application/json',
+  };
+
+  const data = {
+    request: {
+      json: finalPuzzle
+    }
+  };
+  this.http.post('http://localhost:2345/createzip', data, {headers}).subscribe((response: any) => {
+    console.log(response);
+    const contentID = response.data.result.node_id;
+    this.publishContent(contentID);
+  }, error => {
+    console.log(error);
+  });
+}
+
+publishContent(contentID) {
+
+  const headers = {
+    'Content-Type':  'application/json',
+    // tslint:disable-next-line:max-line-length
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZWU4YTgxNDNiZWE0NDU4YjQxMjcyNTU5ZDBhNTczMiJ9.7m4mIUaiPwh_o9cvJuyZuGrOdkfh0Nm0E_25Cl21kxE'
+  };
+
+  const data = {
+    request: {
+      content: {
+        publisher: 'EkStep',
+        lastPublishedBy: 'Ekstep'
+      }
+    }
+  };
+
+  this.http.post(`https://devcon.sunbirded.org/api/private/content/v3/publish/${contentID}`, data, {headers})
+    .subscribe((response: any) => {
+    console.log(response);
+  });
+
 }
 
 ngAfterViewInit() {

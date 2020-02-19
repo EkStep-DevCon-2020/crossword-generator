@@ -1,5 +1,5 @@
 var cw;
-
+var finalPuzzle;
 
 window.onload = function () {
 
@@ -106,7 +106,7 @@ function printJson(groups) {
     puzzle.settings = settings;
     puzzle.labels = labels;
 
-
+    finalPuzzle = puzzle;
     var json = JSON.stringify(puzzle, null, 4)
     document.getElementById('output').innerHTML = '<pre>' + json + '</pre>';
 }
