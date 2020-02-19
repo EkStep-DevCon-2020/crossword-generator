@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 
 const STALL_ID = 'STA1';
-const IDEA_ID = 'IDE4';
+const IDEA_ID = 'IDE3';
 const visitedProfiles = [];
 
 @Component({
