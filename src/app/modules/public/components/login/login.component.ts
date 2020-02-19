@@ -97,6 +97,7 @@ export class LoginComponent implements OnInit {
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
         // this.camera.stop();
+        this.reCaptureImage();
         return throwError(errInfo);
 
       })).subscribe((response) => {
