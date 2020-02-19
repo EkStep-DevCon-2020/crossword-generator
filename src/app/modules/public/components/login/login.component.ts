@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
               public router: Router) { }
 
   ngOnInit() {
+    this.startCamera();
     this.telemetryServcie.initialize({
       did: 'device1',
       stallId: STALL_ID,
@@ -61,12 +62,13 @@ export class LoginComponent implements OnInit {
   }
 
   attachVideo(stream) {
-    this.camera = stream.getTracks()[0];
+    // this.camera = stream.getTracks()[0];
     this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
     this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
       this.videoHeight = this.videoElement.nativeElement.videoHeight;
       this.videoWidth = this.videoElement.nativeElement.videoWidth;
     });
+    this.capture();
   }
   capture() {
     this.captureImage = true;
@@ -74,7 +76,7 @@ export class LoginComponent implements OnInit {
     this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
     this.image = this.canvas.nativeElement.toDataURL('image/png');
-    this.camera.stop();
+    // this.camera.stop();
     this.uploadImage();
   }
 
@@ -94,7 +96,7 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
-        this.camera.stop();
+        // this.camera.stop();
         return throwError(errInfo);
 
       })).subscribe((response) => {
@@ -125,7 +127,9 @@ export class LoginComponent implements OnInit {
       this.openErrorModal = false;
       this.name = res.result.name;
       console.log('response ', res);
+      this.gotoWorkspace();
     }, (err) => {
+      this.reCaptureImage();
       console.log('identifyFace err ', err);
       this.openSuccessModal = false;
       this.openErrorModal = true;
@@ -169,4 +173,13 @@ export class LoginComponent implements OnInit {
   gotoWorkspace() {
     this.router.navigate(['/workspace']);
   }
+
+ reCaptureImage() {
+   setInterval(() => {
+    (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
+    setTimeout(() => {
+      this.capture();
+    }, 3000);
+   }, 15000);
+ }
 }
