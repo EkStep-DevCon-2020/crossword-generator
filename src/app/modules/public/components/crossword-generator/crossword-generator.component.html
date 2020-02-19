@@ -110,5 +110,16 @@
 <sui-dimmer class="inverted" [(isDimmed)]="segmentDimmed">
   <div class="ui text loader">Fetching words!!!</div>
 </sui-dimmer>
+
+<sui-modal *ngIf="showModal" [isClosable]="true" [size]="'tiny'" (dismissed)="showModal = !showModal;" #modal>
+  <div class="header">Content published</div>
+  <div class="content">
+      <a target="_blank" [href]="publishedContentURL">Click here to play</a>
+  </div>
+  <div class="actions">
+  </div>
+</sui-modal>
+
+
 <!--
 <a href="#" id="copy" data-clipboard-target="#output">Copy JSON</a> -->

@@ -42,7 +42,9 @@ export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
   public customClues = false;
   public wordClues: any;
   public showEditButton = false;
+  public showModal = false;
   public editingClues = false;
+  public publishedContentURL: any;
   public topic = [
     {type: 'animal', rel: ['/r/UsedFor', '/r/IsA'], sentence: '___ is used for '},
     {type: 'fruit', rel: ['/r/HasA', '/r/IsA'], sentence: '___ has a '},
@@ -204,7 +206,11 @@ publishContent(contentID) {
 
   this.http.post(`https://devcon.sunbirded.org/api/private/content/v3/publish/${contentID}`, data, {headers})
     .subscribe((response: any) => {
-    console.log(response);
+      this.showModal = true;
+      console.log(response.result.node_id);
+      this.publishedContentURL = `https://devcon.sunbirded.org/play/content/${response.result.node_id}?contentType=Resource`
+  }, error => {
+    console.log(error);
   });
 
 }
