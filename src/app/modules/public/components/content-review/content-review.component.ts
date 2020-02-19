@@ -32,10 +32,23 @@ export class ContentReviewComponent implements OnInit {
   }
   getMetaData(contents) {
     const data = this.config.getCurationData(contents);
-    this.curationMetaData = _.find(data, { identifier: this.contentId });
-    this.title = _.get(this.curationMetaData, 'name');
-    this.curationMetaData = this.curationMetaData.metaData;
-    this.checkCurationStatus(this.curationMetaData);
+    let content = _.find(data, { identifier: this.contentId });
+    this.title = _.get(content, 'name');
+    content = content.metaData;
+    this.checkCurationStatus(content);
+    this.modifyData(content);
+  }
+  modifyData(contents) {
+    const modifiedData = {};
+    _.forEach(contents, (content, key) => {
+      if (_.isString(content)) {
+        content = JSON.parse(content);
+        modifiedData[key] = content;
+      } else {
+        modifiedData[key] = content;
+      }
+    });
+    this.curationMetaData = modifiedData;
   }
   checkCurationStatus(curationStatus) {
     _.forEach(curationStatus, curation => {
