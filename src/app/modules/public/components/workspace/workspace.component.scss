@@ -5,10 +5,13 @@
   }
 
   .sb-card-container {
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 1280px;
-      margin: 0 auto
+    display: grid;
+    max-width: 1280px;
+    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(292px, 1fr));
+    grid-gap: 1rem;
+    grid-template-rows: 8rem;
+    padding: 2rem 2rem;
   }
   
   .sb-card:hover{
@@ -18,21 +21,27 @@
   }
   
   .sb-card {
-  min-height: 8rem;
-  margin: 1.5rem 1.5rem 1.5rem 0;
-  max-width: 18.25rem;
-  border: 0.5px solid #F2F2F2;
-  border-left: 0.25rem solid #fff;
-  border-radius: 0.25rem;
-  background: #fff;
-  padding: 1rem 1.5rem;
-  min-width: 18.25rem;
+    border: 0.5px solid #F2F2F2;
+    border-left: 0.25rem solid #fff;
+    border-radius: 0.25rem;
+    background: #fff;
+    padding: 1rem 1.5rem;
   }
-  
+  .sb-card-label{
+    border: 1px solid #ddd;
+    padding: 0.25rem;
+    display: block;
+    max-width: 68px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-size: 12px;
+    text-align: center;
+  }
   .sb-title {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  font-weight: 700;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #024f9d;
+    margin-bottom: 8px;
   }
   
   .sb-description {
@@ -81,3 +90,22 @@
     }
   }
   
+  
+  .ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+
+  .sb__ellipsis {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+  .sb__ellipsis--two {
+    -webkit-line-clamp: 2;
+  }

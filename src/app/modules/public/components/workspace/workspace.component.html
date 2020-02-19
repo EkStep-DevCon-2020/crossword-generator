@@ -4,7 +4,7 @@
     <div class="sb-card" (click)="viewContentQualityStatus(content)" *ngFor="let content of contents">
       <div class="sb-body">
         <div class="sb-card-label">{{content?.contentType}}</div>
-        <div class="sb-title"><h4>{{content?.name}}</h4></div>
+        <div class="sb-title sb__ellipsis sb__ellipsis--two">{{content?.name}}</div>
         <div class="sb-description">{{content?.description || 'Build books using resources for an interesting
           learning experience.'}}</div>
       </div>
