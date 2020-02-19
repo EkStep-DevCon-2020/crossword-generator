@@ -1,6 +1,9 @@
 
-<h4>{{title}}</h4>
 <div class="review-container">
+  <div class="review-title"> {{title}}
+    <h5 class="ui right floated basic icon circular button  mouse-pointer" (click)="close()"><i class="ui remove icon"></i></h5>  
+  </div>
+
   <div class="review-container-body">
     <div class="review-container-details">
       <div class="action-item" *ngIf="checksPassed !== 5 && checksFailed !== 5">
@@ -33,7 +36,7 @@
           </span>
         </div>
       </div>
-      <div class="action-item">
+      <div class="action-item-list">
         <div class="action-item-icon action-item-icon-status
           action-item-icon-status-error" *ngIf="checksFailed > 0">
           <svg class="octicon octicon-x" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true">
@@ -52,7 +55,7 @@
 
         <div class="status-list" *ngFor="let data of curationMetaData |
           keyvalue">
-          <div class="status-list-item">
+          <div class="status-list-item" [ngClass]="{'status-list-item-active': data.value.type === 'quality'}">
             <app-content-status [data]="data?.value"></app-content-status>
             <a class="status-image">
               <img src="./../../../../../assets/images/{{data.value.type}}.png">
@@ -63,8 +66,8 @@
                 {{data.value.name}}
               </strong>
               <span>— unable to analyse your pull request.</span>
-              <div *ngIf="data.value.type==='quality' && showResult">
-                <div *ngFor="let dataResult of data.value.result | keyvalue">
+              <div class="" *ngIf="data.value.type==='quality' && showResult">
+                <div class="content-status" *ngFor="let dataResult of data.value.result | keyvalue">
                   <app-content-status [data]="dataResult?.value"></app-content-status>
                   <a class="status-image">
                     <img src="./../../../../../assets/images/{{dataResult?.key}}.png">

@@ -157,3 +157,11 @@ li{
 td ul{
   /* width:50%; */
 }
+.status-list-item-active{
+  display: flex;
+  align-items: flex-start;
+  
+}
+.status-list-item-active .status-icon{
+  margin-top: 6px;
+}
