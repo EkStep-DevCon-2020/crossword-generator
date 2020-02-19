@@ -1,4 +1,4 @@
-
+<app-header></app-header>
 <div class="review-container">
   <div class="review-title"> {{title}}
     <h5 class="ui right floated basic icon circular button  mouse-pointer" (click)="close()"><i class="ui remove icon"></i></h5>  
@@ -12,7 +12,7 @@
 
         </div>
         <div class="">
-          <h3 class="status-heading text-yellow">Some checks haven’t completed
+          <h3 class="status-heading text-yellow">Some checks and analysis haven’t completed
             yet</h3>
           <span class="status-meta">
             {{checksFailed}} failing, {{checksPending}}
@@ -65,7 +65,7 @@
               <strong class="text-emphasized">
                 {{data.value.name}}
               </strong>
-              <span>— unable to analyse your pull request.</span>
+              <span>{{data.value.name}} analysis is {{data.value.status}}</span>
               <div class="" *ngIf="data.value.type==='quality' && showResult">
                 <div class="content-status" *ngFor="let dataResult of data.value.result | keyvalue">
                   <app-content-status [data]="dataResult?.value"></app-content-status>
@@ -74,12 +74,10 @@
                   </a>
 
                   <div class="text-gray col-10 truncate truncate-target">
-                    <strong class="text-emphasized">
+                    <strong class="text-emphasized"  suiPopup popupHeader="{{dataResult?.key}}" popupText="Score: {{dataResult?.value?.score || 0}}">
                       {{dataResult?.key}}
                     </strong>
-                    <span>— unable to analyse your pull request.</span>
-
-
+                    <span>{{dataResult.key}} analysis is {{dataResult?.value?.percentile}} {{dataResult?.value.status}}</span>
                   </div>
                 </div>
               </div>
