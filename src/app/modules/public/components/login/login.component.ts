@@ -4,6 +4,8 @@ import { UUID } from 'angular2-uuid';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { $ } from 'protractor';
 
 let STALL_ID = undefined;
 let IDEA_ID = undefined;
@@ -40,7 +42,9 @@ export class LoginComponent implements OnInit {
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
               public telemetryService: TelemetryService,
-              public router: Router, private activatedRoute: ActivatedRoute) { }
+              public router: Router, 
+              private activatedRoute: ActivatedRoute,
+              private httpClient: HttpClient) { }
 
   ngOnInit() {
     this.startCamera();
@@ -77,12 +81,12 @@ export class LoginComponent implements OnInit {
     this.capture();
   }
   capture() {
+    
     this.captureImage = true;
     this.renderer.setProperty(this.canvas.nativeElement, 'width', this.videoWidth);
     this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
     this.image = this.canvas.nativeElement.toDataURL('image/png');
-    // this.camera.stop();
     this.uploadImage();
   }
 
@@ -102,10 +106,10 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
-        // this.camera.stop();
-        this.reCaptureImage();
+        if(STALL_ID !== 'devops') {
+          this.reCaptureImage(); 
+        }
         return throwError(errInfo);
-
       })).subscribe((response) => {
         console.log('response ', response);
         this.identifyFace(response);
@@ -128,8 +132,10 @@ export class LoginComponent implements OnInit {
     this.configService.post(request).pipe().subscribe((res) => {
 
       console.log('response ', res);
+      let firstProfileId = undefined;
       if(res && res.result && res.result.osids && res.result.osids.length > 0) {
         var that = this;
+        firstProfileId = res.result.osids[0];
         res.result.osids.forEach(function(profileId) {
           if(!visitedProfiles.includes(profileId)) {
             console.log("New visitor")
@@ -142,10 +148,19 @@ export class LoginComponent implements OnInit {
             console.log("Old visitor")
           }
         })
+        if(STALL_ID === 'devops' && firstProfileId) {
+          console.log('Devops stall - invoke the external API');
+          this.httpClient.get('http://52.172.214.252/echo/' + firstProfileId).subscribe();
+        }
       }
       //this.camera.stop();
+      if(STALL_ID === 'devops') {
+        
+      }
     }, (err) => {
-      this.reCaptureImage();
+      if(STALL_ID !== 'devops') {
+        this.reCaptureImage(); 
+      }
       console.log('identifyFace err ', err);
       this.openSuccessModal = false;
       this.openErrorModal = true;
@@ -173,6 +188,10 @@ export class LoginComponent implements OnInit {
       this.configService.post(request).pipe().subscribe((res) => {
         if (res.result.Visitor) {
           console.log('response ', res.result.Visitor[0]);
+          if(STALL_ID === 'devops' && res && res.result) {
+            console.log('Devops stall - invoke the external API');
+            this.httpClient.get('http://52.172.214.252/echo/' + res.result.Visitor[0].osid).subscribe();
+          }
           const data = {
             profileId: res.result.Visitor[0].osid
           };
@@ -196,6 +215,6 @@ export class LoginComponent implements OnInit {
     setTimeout(() => {
       this.capture();
     }, 3000);
-   }, 10000);
+   }, 60000);
  }
 }
