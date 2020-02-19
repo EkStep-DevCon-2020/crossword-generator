@@ -5,8 +5,9 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-const STALL_ID = 'STA1';
-const IDEA_ID = 'IDE1';
+const STALL_ID = 'Consumption';
+const IDEA_ID = 'SmartWall';
+let visitedProfiles = [];
 
 @Component({
   selector: 'app-login',
@@ -34,15 +35,16 @@ export class LoginComponent implements OnInit {
       height: { ideal: 300 }
     }
   };
+  
 
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
-              public telemetryServcie: TelemetryService,
+              public telemetryService: TelemetryService,
               public router: Router) { }
 
   ngOnInit() {
     this.startCamera();
-    this.telemetryServcie.initialize({
+    this.telemetryService.initialize({
       did: 'device1',
       stallId: STALL_ID,
       ideaId: IDEA_ID
@@ -109,7 +111,7 @@ export class LoginComponent implements OnInit {
 
   identifyFace(response) {
     const request = {
-      url: `reghelper/face/identify`,
+      url: `reghelper/face/identify/multiple`,
       header: {
         'Content-Type': 'application/json'
       },
@@ -120,16 +122,24 @@ export class LoginComponent implements OnInit {
       }
     };
     this.configService.post(request).pipe().subscribe((res) => {
-      const data = {
-        profileId: res.result.osid
-      };
-      this.telemetryServcie.visit(data);
-      this.openSuccessModal = true;
-      this.openErrorModal = false;
-      this.name = res.result.name;
+
       console.log('response ', res);
-      this.camera.stop();
-      this.gotoWorkspace();
+      if(res && res.result && res.result.osids && res.result.osids.length > 0) {
+        var that = this;
+        res.result.osids.forEach(function(profileId) {
+          if(!visitedProfiles.includes(profileId)) {
+            console.log("New visitor")
+            visitedProfiles.push(profileId)
+            const data = {
+              profileId: profileId
+            };
+            that.telemetryService.visit(data);
+          } else {
+            console.log("Old visitor")
+          }
+        })
+      }
+      //this.camera.stop();
     }, (err) => {
       this.reCaptureImage();
       console.log('identifyFace err ', err);
@@ -162,7 +172,7 @@ export class LoginComponent implements OnInit {
           const data = {
             profileId: res.result.Visitor[0].osid
           };
-          this.telemetryServcie.visit(data);
+          this.telemetryService.visit(data);
           this.openSuccessModal = true;
           this.openErrorModal = false;
           this.name = res.result.Visitor[0].name;
@@ -182,6 +192,6 @@ export class LoginComponent implements OnInit {
     setTimeout(() => {
       this.capture();
     }, 3000);
-   }, 15000);
+   }, 60000);
  }
 }
