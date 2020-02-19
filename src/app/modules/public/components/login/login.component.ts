@@ -133,8 +133,12 @@ export class LoginComponent implements OnInit {
             console.log('Old visitor');
           }
         });
+        this.openSuccessModal = true;
+        this.openErrorModal = false;
+      } else {
+        this.openSuccessModal = false;
+        this.openErrorModal = true;
       }
-
     }, (err) => {
       console.log('identifyFace err ', err);
       this.openSuccessModal = false;

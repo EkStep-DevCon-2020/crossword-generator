@@ -55,11 +55,8 @@
             <div class="status-content" *ngIf="openSuccessModal">
                 <img src="./../../../../../assets/images/check.gif" alt="checked">
                 <div class="status-info">
-                    <div class="title">
-                        {{name}}
-                    </div>
                     <div class="status-msg"> 
-                        You are recognized as Mr/Mrs. {{name}}. Please confirm and continue to create your content.
+                        Please confirm and continue to create your content.
                     </div>
                 </div>
                 <a class="sb-btn sb-btn-secondary sb-btn-normal"
@@ -69,9 +66,6 @@
             <div class="status-content" *ngIf="openErrorModal">
                 <img src="./../../../../../assets/images/failed.gif" alt="failed">
                 <div class="status-info">
-                    <div class="title">
-                        Title comes here
-                    </div>
                     <div class="status-msg"> You are not recognized. Please try
                         again or continue with QR Code.
                     </div>
