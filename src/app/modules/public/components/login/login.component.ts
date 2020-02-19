@@ -5,8 +5,8 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-const STALL_ID = 'creation_2';
-const IDEA_ID = 'crossword';
+const STALL_ID = 'STA1';
+const IDEA_ID = 'IDE1';
 
 @Component({
   selector: 'app-login',
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
   }
 
   attachVideo(stream) {
-    // this.camera = stream.getTracks()[0];
+    this.camera = stream.getTracks()[0];
     this.renderer.setProperty(this.videoElement.nativeElement, 'srcObject', stream);
     this.renderer.listen(this.videoElement.nativeElement, 'play', (event) => {
       this.videoHeight = this.videoElement.nativeElement.videoHeight;
@@ -128,6 +128,7 @@ export class LoginComponent implements OnInit {
       this.openErrorModal = false;
       this.name = res.result.name;
       console.log('response ', res);
+      this.camera.stop();
       this.gotoWorkspace();
     }, (err) => {
       this.reCaptureImage();
