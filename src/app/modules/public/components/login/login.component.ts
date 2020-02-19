@@ -5,8 +5,8 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-const STALL_ID = 'Consumption';
-const IDEA_ID = 'SmartWall';
+let STALL_ID = undefined;
+let IDEA_ID = undefined;
 let visitedProfiles = [];
 
 @Component({
@@ -40,14 +40,18 @@ export class LoginComponent implements OnInit {
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
               public telemetryService: TelemetryService,
-              public router: Router) { }
+              public router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.startCamera();
-    this.telemetryService.initialize({
-      did: 'device1',
-      stallId: STALL_ID,
-      ideaId: IDEA_ID
+    this.activatedRoute.queryParams.subscribe(params => {
+      STALL_ID = params['stallId'];
+      IDEA_ID = params['ideaId'];
+      this.telemetryService.initialize({
+        did: 'device1',
+        stallId: STALL_ID,
+        ideaId: IDEA_ID
+      });
     });
   }
 
