@@ -5,9 +5,9 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-const STALL_ID = 'STA1';
-const IDEA_ID = 'IDE2';
-const visitedProfiles = [];
+const STALL_ID = 'Consumption';
+const IDEA_ID = 'SmartWall';
+let visitedProfiles = [];
 
 @Component({
   selector: 'app-login',
@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
       height: { ideal: 300 }
     }
   };
+  
 
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
@@ -69,6 +70,7 @@ export class LoginComponent implements OnInit {
       this.videoHeight = this.videoElement.nativeElement.videoHeight;
       this.videoWidth = this.videoElement.nativeElement.videoWidth;
     });
+    this.capture();
   }
   capture() {
     this.captureImage = true;
@@ -76,7 +78,7 @@ export class LoginComponent implements OnInit {
     this.renderer.setProperty(this.canvas.nativeElement, 'height', this.videoHeight);
     this.canvas.nativeElement.getContext('2d').drawImage(this.videoElement.nativeElement, 0, 0);
     this.image = this.canvas.nativeElement.toDataURL('image/png');
-    this.camera.stop();
+    // this.camera.stop();
     this.uploadImage();
   }
 
@@ -96,6 +98,7 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
+        // this.camera.stop();
         this.reCaptureImage();
         return throwError(errInfo);
 
@@ -119,23 +122,24 @@ export class LoginComponent implements OnInit {
       }
     };
     this.configService.post(request).pipe().subscribe((res) => {
-      if (res && res.result && res.result.osids && res.result.osids.length > 0) {
-        const that = this;
-        // tslint:disable-next-line:only-arrow-functions
+
+      console.log('response ', res);
+      if(res && res.result && res.result.osids && res.result.osids.length > 0) {
+        var that = this;
         res.result.osids.forEach(function(profileId) {
-          if (!visitedProfiles.includes(profileId)) {
-            console.log('New visitor');
-            visitedProfiles.push(profileId);
+          if(!visitedProfiles.includes(profileId)) {
+            console.log("New visitor")
+            visitedProfiles.push(profileId)
             const data = {
-              profileId
+              profileId: profileId
             };
             that.telemetryService.visit(data);
           } else {
-            console.log('Old visitor');
+            console.log("Old visitor")
           }
-        });
+        })
       }
-
+      //this.camera.stop();
     }, (err) => {
       this.reCaptureImage();
       console.log('identifyFace err ', err);
@@ -163,7 +167,7 @@ export class LoginComponent implements OnInit {
         }
       };
       this.configService.post(request).pipe().subscribe((res) => {
-        if (res.result.Visitor.length > 0) {
+        if (res.result.Visitor) {
           console.log('response ', res.result.Visitor[0]);
           const data = {
             profileId: res.result.Visitor[0].osid
@@ -172,8 +176,6 @@ export class LoginComponent implements OnInit {
           this.openSuccessModal = true;
           this.openErrorModal = false;
           this.name = res.result.Visitor[0].name;
-        } else {
-          this.openErrorModal = true;
         }
       });
 
@@ -184,12 +186,12 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/workspace']);
   }
 
-  reCaptureImage() {
-    setInterval(() => {
-     (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
-     setTimeout(() => {
-       this.capture();
-     }, 3000);
-    }, 60000);
-  }
+ reCaptureImage() {
+   setInterval(() => {
+    (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
+    setTimeout(() => {
+      this.capture();
+    }, 3000);
+   }, 10000);
+ }
 }
