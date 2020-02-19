@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 const STALL_ID = 'STA1';
 const IDEA_ID = 'IDE2';
+const visitedProfiles = [];
 
 @Component({
   selector: 'app-login',
@@ -37,11 +38,11 @@ export class LoginComponent implements OnInit {
 
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
-              public telemetryServcie: TelemetryService,
+              public telemetryService: TelemetryService,
               public router: Router) { }
 
   ngOnInit() {
-    this.telemetryServcie.initialize({
+    this.telemetryService.initialize({
       did: 'device1',
       stallId: STALL_ID,
       ideaId: IDEA_ID
@@ -106,7 +107,7 @@ export class LoginComponent implements OnInit {
 
   identifyFace(response) {
     const request = {
-      url: `reghelper/face/identify`,
+      url: `reghelper/face/identify/multiple`,
       header: {
         'Content-Type': 'application/json'
       },
@@ -117,14 +118,23 @@ export class LoginComponent implements OnInit {
       }
     };
     this.configService.post(request).pipe().subscribe((res) => {
-      const data = {
-        profileId: res.result.osid
-      };
-      this.telemetryServcie.visit(data);
-      this.openSuccessModal = true;
-      this.openErrorModal = false;
-      this.name = res.result.name;
-      console.log('response ', res);
+      if (res && res.result && res.result.osids && res.result.osids.length > 0) {
+        const that = this;
+        // tslint:disable-next-line:only-arrow-functions
+        res.result.osids.forEach(function(profileId) {
+          if (!visitedProfiles.includes(profileId)) {
+            console.log('New visitor');
+            visitedProfiles.push(profileId);
+            const data = {
+              profileId
+            };
+            that.telemetryService.visit(data);
+          } else {
+            console.log('Old visitor');
+          }
+        });
+      }
+
     }, (err) => {
       console.log('identifyFace err ', err);
       this.openSuccessModal = false;
@@ -156,7 +166,7 @@ export class LoginComponent implements OnInit {
           const data = {
             profileId: res.result.Visitor[0].osid
           };
-          this.telemetryServcie.visit(data);
+          this.telemetryService.visit(data);
           this.openSuccessModal = true;
           this.openErrorModal = false;
           this.name = res.result.Visitor[0].name;
