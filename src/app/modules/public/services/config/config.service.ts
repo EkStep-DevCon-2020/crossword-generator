@@ -63,7 +63,7 @@ export class ConfigService {
       }));
   }
 
-  searchContents(): Observable<any> {
+  searchContents(identifier?): Observable<any> {
     const requestParam = {
       url: 'composite/v1/search',
       data: {
@@ -72,19 +72,25 @@ export class ConfigService {
             objectType: 'Content',
             status: ['Review', 'Draft', 'Live'],
           },
-          exists: ['cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
-          fields: ['identifier', 'name', 'description', 'status', 'contentType',
-          'createdBy', 'appIcon', 'cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
+          exists: ['cml_tags', 'cml_profanity', 'cml_audio',
+          'ckp_size', 'ckp_profanity', 'ckp_audio', 'ckp_image', 'ckp_keywords', 'ckp_lng_analysis', 'ckp_translation'],
+          fields: ['identifier', 'name', 'description', 'status',
+          'contentType', 'createdBy', 'appIcon', 'cml_tags', 'cml_profanity',
+          'cml_audio', 'ckp_size', 'ckp_profanity', 'ckp_audio', 'ckp_image', 'ckp_keywords', 'ckp_lng_analysis', 'ckp_translation'],
+          sort_by: {createdOn: 'desc'},
+          limit: 100
         }
       }
     };
+    if (identifier) {   requestParam.data.request.filters['identifier'] = identifier; }
     return this.post(requestParam);
   }
 
   getCurationData(contents) {
       const metaData = [];
       _.forEach(contents, content => {
-        const data = _.pick(content, 'cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size');
+        const data = _.pick(content, 'cml_tags', 'cml_profanity', 'cml_audio',
+        'ckp_size', 'ckp_profanity', 'ckp_audio', 'ckp_image', 'ckp_keywords', 'ckp_lng_analysis', 'ckp_translation');
         metaData.push({identifier: content.identifier, metaData: data, name: content.name});
       });
       return metaData;

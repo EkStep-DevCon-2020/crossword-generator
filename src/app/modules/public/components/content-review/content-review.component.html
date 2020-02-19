@@ -1,7 +1,8 @@
 <app-header></app-header>
 <div class="review-container">
   <div class="review-title"> {{title}}
-    <h5 class="ui right floated basic icon circular button  mouse-pointer" (click)="close()"><i class="ui remove icon"></i></h5>  
+    <h5 class="ui right floated basic icon circular button mouse-pointer"
+      (click)="close()"><i class="ui remove icon"></i></h5>
   </div>
 
   <div class="review-container-body">
@@ -12,7 +13,8 @@
 
         </div>
         <div class="">
-          <h3 class="status-heading text-yellow">Some checks and analysis haven’t completed
+          <h3 class="status-heading text-yellow">Some checks and analysis
+            haven’t completed
             yet</h3>
           <span class="status-meta">
             {{checksFailed}} failing, {{checksPending}}
@@ -20,81 +22,140 @@
           </span>
         </div>
       </div>
-      <div class="action-item" *ngIf="checksPassed > 0">
+      <div class="action-item" *ngIf="checksPassed> 0">
         <div class="action-item-icon action-item-icon-status
           action-item-icon-status-success">
-          <svg class="octicon octicon-check" viewBox="0 0 12 16" version="1.1" width="12" height="16"
+          <svg class="octicon octicon-check" viewBox="0 0 12 16" version="1.1"
+            width="12" height="16"
             aria-hidden="true">
             <path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12
               5z"></path>
           </svg>
         </div>
         <div class="">
-          <h3 class="status-heading text-green">{{checksPassed}} checks have passed</h3>
+          <h3 class="status-heading text-green">{{checksPassed}} checks have
+            passed</h3>
           <span class="status-meta">
             {{checksPassed}} successful checks
           </span>
         </div>
       </div>
-     <div class="action-item">
-      <div class="action-item-icon action-item-icon-status
-          action-item-icon-status-error" *ngIf="checksFailed > 0">
-          <svg class="octicon octicon-x" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true">
+      <div class="action-item">
+        <div class="action-item-icon action-item-icon-status
+          action-item-icon-status-error" *ngIf="checksFailed> 0">
+          <svg class="octicon octicon-x" viewBox="0 0 12 16" version="1.1"
+            width="12" height="16" aria-hidden="true">
             <path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6
               9.48l-3.75 3.75-1.48-1.48L4.52 8
               .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48L7.48 8z">
             </path>
           </svg>
         </div>
-        <div class=""  *ngIf="checksFailed > 0">
-          <h3 class="status-heading text-red">{{checksFailed}} checks have failed</h3>
+        <div class="" *ngIf="checksFailed> 0">
+          <h3 class="status-heading text-red">{{checksFailed}} checks have
+            failed</h3>
           <span class="status-meta">
             {{checksFailed}} errored and {{checksPending}} failing checks
           </span>
         </div>
-     </div>
+      </div>
 
-      <div class="status-list" *ngFor="let data of curationMetaData |
-      keyvalue">
-      <div class="status-list-item" [ngClass]="{'status-list-item-active': data.value.type === 'quality'}">
-        <app-content-status [data]="data?.value"></app-content-status>
-        <a class="status-image">
-          <img src="./../../../../../assets/images/{{data.value.type}}.png">
-        </a>
+      <div class="status-list" *ngFor="let data of curationMetaData">
+        <div class="status-list-item" [ngClass]="{'status-list-item-active':
+          (data.type === 'quality' || data.type === 'ln_analysis')}">
+          <app-content-status [data]="data"></app-content-status>
+          <a class="status-image">
+            <img src="./../../../../../assets/images/{{data.type}}.png">
+          </a>
 
-        <div class="text-gray col-10 truncate truncate-target">
-          <strong class="text-emphasized">
-            {{data.value.name}}
-          </strong>
-          <span>{{data.value.name}} analysis is {{data.value.status}}</span>
-          <div class="" *ngIf="data.value.type==='quality' && showResult">
-            <div class="content-status" *ngFor="let dataResult of data.value.result | keyvalue">
-              <app-content-status [data]="dataResult?.value"></app-content-status>
-              <a class="status-image">
-                <img src="./../../../../../assets/images/{{dataResult?.key}}.png">
-              </a>
+          <div class="text-gray col-10 truncate truncate-target">
+            <strong class="text-emphasized">
+              {{(data?.name).charAt(0).toUpperCase() +
+              (data?.name).slice(1).toLowerCase()}}
+            </strong>
+            <span *ngIf="data?.name === 'Suggested Tags'">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1).toLowerCase()}}: {{data?.result}}</span>
+            <span *ngIf="data?.name === 'Suggested Keywords'">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1).toLowerCase()}}: {{data?.result}}</span>
+            <span *ngIf="data?.name === 'Language Analysis'">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1).toLowerCase()}} analysis is
+              {{data?.status}}</span>
+            <span *ngIf="data?.name === 'Translation'">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1).toLowerCase()}} analysis is
+              {{data?.status}}</span>
+            <span *ngIf="data?.name === 'Content quality'">{{(data?.name).charAt(0).toUpperCase()
+              + (data?.name).slice(1).toLowerCase()}} check is {{data?.status}}</span>
+            <div class="" *ngIf="(data.type==='quality') && showResult">
+              <div class="content-status" *ngFor="let dataResult of
+                data.result">
+                <app-content-status [data]="dataResult"></app-content-status>
+                <a class="status-image">
+                  <img
+                    src="./../../../../../assets/images/{{(dataResult.name).toLowerCase()}}.png">
+                </a>
 
-              <div class="text-gray col-10 truncate truncate-target">
-                <strong class="text-emphasized" suiPopup popupHeader="{{dataResult?.key}}" popupText="Score: {{dataResult?.value?.score || 0}}">
-                  {{dataResult?.key}}
-                </strong>
-                <span>{{dataResult.key}} analysis is {{dataResult?.value?.percentile}} {{dataResult?.value.status}}</span>
+                <div class="text-gray col-10 truncate truncate-target">
+                  <strong class="text-emphasized">
+                    {{dataResult?.name}}
+                  </strong>
+                  <span *ngIf="dataResult?.name === 'Audio'">
+                    {{dataResult?.name}} accuracy is
+                    {{dataResult?.result?.percentile}}
+                  </span>
+                  <span *ngIf="dataResult?.name === 'Image'">
+                    {{dataResult?.name}} quality {{dataResult?.result}}
+                  </span>
+                  <span *ngIf="dataResult?.name === 'Profanity'">
+                    {{dataResult?.name}} check {{dataResult?.result}}
+                  </span>
+                  <span *ngIf="dataResult?.name === 'Size'">
+                    {{dataResult?.name}} is {{dataResult?.result || 0}}
+                  </span>
 
 
+                </div>
               </div>
             </div>
+
+            <div class="" *ngIf="(data.type==='ln_analysis') && showResult">
+              <div class="content-status" *ngFor="let lnResult of data.result |
+                keyvalue">
+                <div class="text-gray col-10 truncate truncate-target">
+                  <strong class="text-emphasized">
+                    {{(lnResult?.key).charAt(0).toUpperCase() +
+                    (lnResult?.key).slice(1).toLowerCase()}}
+                  </strong>
+                  <!-- <span *ngIf="lnResult?.key === 'totalWordCount'">
+                    : {{lnResult?.key}}
+                  </span>
+                  <span *ngIf="lnResult?.key === 'nonThresholdVocabulary'">
+                   WordCount: {{lnResult?.key['wordCount'] | json}}
+                  </span>
+                  <span *ngIf="lnResult?.key === 'thresholdVocabulary'">
+                    WordCount: {{lnResult?.key['wordCount'] | json}}
+                  </span>
+                  <span *ngIf="lnResult?.name === 'Size'">
+                    {{lnResult?.key}} is {{lnResult?.value}}
+                  </span> -->
+
+
+                </div>
+              </div>
+
+   
+            </div>
+          </div>
+          <div class="d-flex col-2 flex-shrink-0">
+            <span class="status-actions">Required</span> &nbsp;
+            <span *ngIf="data.type === 'quality' || data.type == 'ln_analysis'"
+              (click)="showResult=
+              !showResult">
+              <a *ngIf="showResult"> Hide details</a>
+              <a *ngIf="!showResult"> Show details</a>
+            </span>
           </div>
         </div>
-        <div class="d-flex col-2 flex-shrink-0">
-          <span class="status-actions">Required</span> &nbsp;
-          <span *ngIf="data.value.type === 'quality'" (click)="showResult=
-            !showResult">
-            <a *ngIf="showResult"> Hide details</a>
-            <a *ngIf="!showResult"> Show details</a>
-          </span>
-        </div>
       </div>
-    </div>
 
     </div>
   </div>
