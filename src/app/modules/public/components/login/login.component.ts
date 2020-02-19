@@ -5,8 +5,9 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-const STALL_ID = 'creation_2';
-const IDEA_ID = 'crossword';
+const STALL_ID = 'STA1';
+const IDEA_ID = 'IDE2';
+const visitedProfiles = [];
 
 @Component({
   selector: 'app-login',
@@ -37,11 +38,12 @@ export class LoginComponent implements OnInit {
 
   constructor(private renderer: Renderer2,
               public configService: ConfigService,
-              public telemetryServcie: TelemetryService,
+              public telemetryService: TelemetryService,
               public router: Router) { }
 
   ngOnInit() {
-    this.telemetryServcie.initialize({
+    this.startCamera();
+    this.telemetryService.initialize({
       did: 'device1',
       stallId: STALL_ID,
       ideaId: IDEA_ID
@@ -94,7 +96,7 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
-        this.camera.stop();
+        this.reCaptureImage();
         return throwError(errInfo);
 
       })).subscribe((response) => {
@@ -106,7 +108,7 @@ export class LoginComponent implements OnInit {
 
   identifyFace(response) {
     const request = {
-      url: `reghelper/face/identify`,
+      url: `reghelper/face/identify/multiple`,
       header: {
         'Content-Type': 'application/json'
       },
@@ -117,15 +119,25 @@ export class LoginComponent implements OnInit {
       }
     };
     this.configService.post(request).pipe().subscribe((res) => {
-      const data = {
-        profileId: res.result.osid
-      };
-      this.telemetryServcie.visit(data);
-      this.openSuccessModal = true;
-      this.openErrorModal = false;
-      this.name = res.result.name;
-      console.log('response ', res);
+      if (res && res.result && res.result.osids && res.result.osids.length > 0) {
+        const that = this;
+        // tslint:disable-next-line:only-arrow-functions
+        res.result.osids.forEach(function(profileId) {
+          if (!visitedProfiles.includes(profileId)) {
+            console.log('New visitor');
+            visitedProfiles.push(profileId);
+            const data = {
+              profileId
+            };
+            that.telemetryService.visit(data);
+          } else {
+            console.log('Old visitor');
+          }
+        });
+      }
+
     }, (err) => {
+      this.reCaptureImage();
       console.log('identifyFace err ', err);
       this.openSuccessModal = false;
       this.openErrorModal = true;
@@ -151,15 +163,17 @@ export class LoginComponent implements OnInit {
         }
       };
       this.configService.post(request).pipe().subscribe((res) => {
-        if (res.result.Visitor) {
+        if (res.result.Visitor.length > 0) {
           console.log('response ', res.result.Visitor[0]);
           const data = {
             profileId: res.result.Visitor[0].osid
           };
-          this.telemetryServcie.visit(data);
+          this.telemetryService.visit(data);
           this.openSuccessModal = true;
           this.openErrorModal = false;
           this.name = res.result.Visitor[0].name;
+        } else {
+          this.openErrorModal = true;
         }
       });
 
@@ -168,5 +182,14 @@ export class LoginComponent implements OnInit {
 
   gotoWorkspace() {
     this.router.navigate(['/workspace']);
+  }
+
+  reCaptureImage() {
+    setInterval(() => {
+     (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
+     setTimeout(() => {
+       this.capture();
+     }, 3000);
+    }, 60000);
   }
 }
