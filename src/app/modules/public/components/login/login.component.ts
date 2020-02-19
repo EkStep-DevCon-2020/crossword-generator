@@ -4,8 +4,8 @@ import { UUID } from 'angular2-uuid';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 
-const STALL_ID = 'creation_2';
-const IDEA_ID = 'crossword';
+const STALL_ID = 'STA1';
+const IDEA_ID = 'IDE4';
 
 @Component({
   selector: 'app-login',
