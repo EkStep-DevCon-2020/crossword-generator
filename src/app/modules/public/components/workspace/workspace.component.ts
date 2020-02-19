@@ -23,6 +23,6 @@ export class WorkspaceComponent implements OnInit {
   }
 
   viewContentQualityStatus(content) {
-    this.router.navigate(['/content/review/', content.identifier]);
+    this.router.navigate(['/review/', content.identifier]);
   }
 }

@@ -2,6 +2,7 @@ import { ConfigService } from './../../services';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-content-review',
@@ -18,7 +19,7 @@ export class ContentReviewComponent implements OnInit {
   showResult = true;
   title ;
 
-  constructor(public config: ConfigService, public activatedRoute: ActivatedRoute) { }
+  constructor(public config: ConfigService, public activatedRoute: ActivatedRoute, public location: Location) { }
 
   ngOnInit() {
 
@@ -47,5 +48,9 @@ export class ContentReviewComponent implements OnInit {
         this.checksFailed++;
       }
     });
+  }
+
+  close() {
+    this.location.back();
   }
 }

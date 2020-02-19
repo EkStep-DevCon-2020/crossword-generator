@@ -70,7 +70,7 @@ export class ConfigService {
         request : {
           filters: {
             objectType: 'Content',
-            status: ['Review', 'Draft', 'Live']
+            status: ['Review', 'Draft', 'Live'],
           },
           exists: ['cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
           fields: ['identifier', 'name', 'description', 'status', 'contentType',
