@@ -125,6 +125,10 @@ export class LoginComponent implements OnInit {
       this.openErrorModal = false;
       this.name = res.result.name;
       console.log('response ', res);
+    }, (err) => {
+      console.log('identifyFace err ', err);
+      this.openSuccessModal = false;
+      this.openErrorModal = true;
     });
   }
 
@@ -163,12 +167,6 @@ export class LoginComponent implements OnInit {
   }
 
   gotoWorkspace() {
-    // this.closeModal();
     this.router.navigate(['/workspace']);
-  }
-
-  closeModal() {
-    (this.canvas.nativeElement.getContext('2d')).clearRect(0, 0, this.canvas.nativeElement.height, this.canvas.nativeElement.width);
-    this.startCamera();
   }
 }
