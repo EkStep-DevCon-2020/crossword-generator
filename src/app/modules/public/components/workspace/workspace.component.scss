@@ -10,7 +10,6 @@
     margin: 0 auto;
     grid-template-columns: repeat(auto-fill, minmax(292px, 1fr));
     grid-gap: 1rem;
-    grid-template-rows: 8rem;
     padding: 2rem 2rem;
   }
   
@@ -99,7 +98,9 @@
   }
 
   .sb__ellipsis {
+    /* autoprefixer: off */
     -webkit-box-orient: vertical;
+    /* autoprefixer: on */
     display: -webkit-box;
     -webkit-line-clamp: 1;
     overflow: hidden;
