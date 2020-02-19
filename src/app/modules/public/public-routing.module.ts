@@ -9,7 +9,7 @@ const routes: Routes = [{
     path: 'workspace', component: WorkspaceComponent
   },
   {
-    path: 'cw', component: CrosswordGeneratorComponent
+    path: 'crossword', component: CrosswordGeneratorComponent
   },
   {
     path: 'review/:contentId', component: ContentReviewComponent

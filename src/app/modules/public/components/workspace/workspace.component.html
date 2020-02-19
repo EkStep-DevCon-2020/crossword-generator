@@ -4,8 +4,7 @@
     <div class="sb-card" (click)="viewContentQualityStatus(content)">
       <div class="sb-body">
         <div class="sb-title sb__ellipsis sb__ellipsis--two">CrossWords</div>
-        <div class="sb-description">{{content?.description || 'Build books using resources for an interesting
-          learning experience.'}}</div>
+        <div  [routerLink]="['/crossword']" class="sb-description">{{content?.description || 'Create crossword puzzle'}}</div>
       </div>
     </div>
   </div>
