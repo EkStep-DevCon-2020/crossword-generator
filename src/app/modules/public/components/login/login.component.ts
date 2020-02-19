@@ -5,9 +5,9 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-const STALL_ID = 'Consumption';
-const IDEA_ID = 'SmartWall';
-let visitedProfiles = [];
+const STALL_ID = 'STA1';
+const IDEA_ID = 'IDE1';
+const visitedProfiles = [];
 
 @Component({
   selector: 'app-login',
@@ -124,22 +124,27 @@ export class LoginComponent implements OnInit {
     this.configService.post(request).pipe().subscribe((res) => {
 
       console.log('response ', res);
-      if(res && res.result && res.result.osids && res.result.osids.length > 0) {
-        var that = this;
+      if (res && res.result && res.result.osids && res.result.osids.length > 0) {
+        // tslint:disable-next-line:prefer-const
+        let that = this;
+        // tslint:disable-next-line:only-arrow-functions
         res.result.osids.forEach(function(profileId) {
-          if(!visitedProfiles.includes(profileId)) {
-            console.log("New visitor")
-            visitedProfiles.push(profileId)
+          if (!visitedProfiles.includes(profileId)) {
+            visitedProfiles.push(profileId);
             const data = {
-              profileId: profileId
+              profileId
             };
             that.telemetryService.visit(data);
           } else {
-            console.log("Old visitor")
+            console.log('Old visitor');
           }
-        })
+        });
+        this.openSuccessModal = true;
+        this.openErrorModal = false;
+      } else {
+        this.openSuccessModal = false;
+        this.openErrorModal = true;
       }
-      //this.camera.stop();
     }, (err) => {
       this.reCaptureImage();
       console.log('identifyFace err ', err);
