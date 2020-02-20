@@ -106,7 +106,7 @@ export class LoginComponent implements OnInit {
       };
       this.configService.post(request).pipe(catchError(err => {
         const errInfo = { errorMsg: 'Image upload failed' };
-        if(STALL_ID !== 'devops') {
+        if(STALL_ID !== 'STA4') {
           this.reCaptureImage(); 
         }
         return throwError(errInfo);
@@ -148,17 +148,13 @@ export class LoginComponent implements OnInit {
             console.log("Old visitor")
           }
         })
-        if(STALL_ID === 'devops' && firstProfileId) {
+        if(STALL_ID === 'STA4' && firstProfileId) {
           console.log('Devops stall - invoke the external API');
           this.httpClient.get('http://52.172.214.252/echo/' + firstProfileId).subscribe();
         }
       }
-      //this.camera.stop();
-      if(STALL_ID === 'devops') {
-        
-      }
     }, (err) => {
-      if(STALL_ID !== 'devops') {
+      if(STALL_ID !== 'STA4') {
         this.reCaptureImage(); 
       }
       console.log('identifyFace err ', err);
@@ -215,6 +211,6 @@ export class LoginComponent implements OnInit {
     setTimeout(() => {
       this.capture();
     }, 3000);
-   }, 60000);
+   }, 10000);
  }
 }
