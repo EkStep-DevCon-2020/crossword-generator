@@ -150,7 +150,7 @@ export class LoginComponent implements OnInit {
         })
         if(STALL_ID === 'STA4' && firstProfileId) {
           console.log('Devops stall - invoke the external API');
-          this.httpClient.get('http://52.172.214.252/echo/' + firstProfileId).subscribe();
+          this.httpClient.get('https://minimal-sunbird.tk/echo/' + firstProfileId).subscribe();
         }
       }
     }, (err) => {
