@@ -7,22 +7,31 @@
 
   <div class="review-container-body">
     <div class="review-container-details">
-      <div class="action-item" *ngIf="checksPassed !== 5 && checksFailed !== 5">
+      <div class="action-item" *ngIf="checks.pending.count > 0">
         <div class="action-item-icon action-item-icon-status
           action-item-icon-status-warning">
 
         </div>
         <div class="">
-          <h3 class="status-heading text-yellow">Some checks and analysis
-            haven’t completed
-            yet</h3>
+          <h3 class="status-heading text-yellow">
+            <span *ngIf="checks.pending.count === 4"> All checks have pending</span>
+            <span *ngIf="checks.pending.count === 1"> {{checks.pending.count}} check has pending</span>
+            <span *ngIf="checks.pending.count < 4 && checks.pending.count >= 2"> {{checks.pending.count}} checks are pending</span>
+          </h3>
+          <!-- <h3 class="status-heading text-yellow" *ngIf="(checks.pending.type).includes('ln_analysis')">
+            <span *ngIf="checks.pending.count === 5"> All checks and analysis have pending</span>
+            <span *ngIf="checks.pending.count === 1 && (checks.pending.type).includes('ln_analysis')" > {{checks.pending.count}} check has pending</span>
+            <span *ngIf="checks.pending.count === 1 && !(checks.pending.type).includes('ln_analysis')" > {{checks.pending.count}} check has pending</span>
+
+            <span *ngIf="checks.pending.count < 5 && checks.pending.count >=2"> {{checks.pending.count}} checks and analysis are pending</span>
+          </h3> -->
           <span class="status-meta">
-            {{checksFailed}} failing, {{checksPending}}
-            expected,{{checksPassed}} successful checks
+            {{checks.passed.count}} successful, {{checks.failed.count}} failed, {{checks.pending.count}}
+            expected
           </span>
         </div>
       </div>
-      <div class="action-item" *ngIf="checksPassed> 0">
+      <div class="action-item" *ngIf="checks.passed.count > 0">
         <div class="action-item-icon action-item-icon-status
           action-item-icon-status-success">
           <svg class="octicon octicon-check" viewBox="0 0 12 16" version="1.1"
@@ -33,16 +42,27 @@
           </svg>
         </div>
         <div class="">
-          <h3 class="status-heading text-green">{{checksPassed}} checks have
-            passed</h3>
+          <h3 class="status-heading text-green">
+            <span *ngIf="checks.passed.count === 4"> All checks have passed</span>
+            <span *ngIf="checks.passed.count === 1 && !(checks.passed.type).includes('ln_analysis')" > {{checks.passed.count}} check has passed</span>
+
+            <span *ngIf="checks.passed.count < 4 && checks.passed.count >=2"> {{checks.passed.count}} checks have passed</span>
+          </h3>
+          <!-- <h3 class="status-heading text-green" *ngIf="(checks.passed.type).includes('ln_analysis')">
+            <span *ngIf="checks.passed.count === 5"> All checks and analysis have passed</span>
+            <span *ngIf="checks.passed.count === 1 && (checks.passed.type).includes('ln_analysis')" > {{checks.passed.count}} check has passed</span>
+            <span *ngIf="checks.passed.count === 1 && !(checks.passed.type).includes('ln_analysis')" > {{checks.passed.count}} check has passed</span>
+            <span *ngIf="checks.passed.count < 5 && checks.passed.count >=2"> {{checks.passed.count}} checks and analysis have passed</span>
+          </h3> -->
+
           <span class="status-meta">
-            {{checksPassed}} successful checks
+            {{checks.passed.count}} successful
           </span>
         </div>
       </div>
-      <div class="action-item">
+      <div class="action-item"  *ngIf="checks.failed.count > 0">
         <div class="action-item-icon action-item-icon-status
-          action-item-icon-status-error" *ngIf="checksFailed> 0">
+          action-item-icon-status-error">
           <svg class="octicon octicon-x" viewBox="0 0 12 16" version="1.1"
             width="12" height="16" aria-hidden="true">
             <path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6
@@ -51,11 +71,20 @@
             </path>
           </svg>
         </div>
-        <div class="" *ngIf="checksFailed> 0">
-          <h3 class="status-heading text-red">{{checksFailed}} checks have
-            failed</h3>
+        <div class="">
+          <h3 class="status-heading text-red">
+            <span *ngIf="checks.failed.count === 4"> All checks have failed</span>
+            <span *ngIf="checks.failed.count === 1"> {{checks.failed.count}} check has failed</span>
+            <span *ngIf="checks.failed.count < 4 && checks.failed.count >=2 "> {{checks.failed.count}} checks have failed</span>
+          </h3>
+          <!-- <h3 class="status-heading text-red" *ngIf="(checks.failed.type).includes('ln_analysis')">
+            <span *ngIf="checks.failed.count === 5"> All checks and analysis have failed</span>
+            <span *ngIf="checks.failed.count === 1 && (checks.failed.type).includes('ln_analysis')"> {{checks.failed.count}} analysis has failed</span>
+            <span *ngIf="checks.failed.count === 1 && !(checks.failed.type).includes('ln_analysis')" > {{checks.failed.count}} check has failed</span>
+            <span *ngIf="checks.failed.count < 5 && checks.failed.count >=2 "> {{checks.failed.count}} checks and analysis have failed</span>
+          </h3> -->
           <span class="status-meta">
-            {{checksFailed}} errored and {{checksPending}} failing checks
+            {{checks.failed.count}} failed
           </span>
         </div>
       </div>
@@ -73,23 +102,19 @@
               {{(data?.name).charAt(0).toUpperCase() +
               (data?.name).slice(1)}}
             </strong>
-            <span *ngIf="data?.name === 'Suggested Tags' && data?.result">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1)}}: {{data?.result}}</span>
-            <span *ngIf="data?.name === 'Suggested Keywords' && data?.result">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1)}}: {{data?.result}}</span>
-            <span *ngIf="data?.name === 'Language Analysis' && data?.status">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1)}} is
-              {{data?.status}}</span>
-            <span *ngIf="data?.name === 'Translation' && data?.status">
+            <span *ngIf="data?.name === 'Suggested Tags' && data?.result.length > 0"> Suggested Tags: {{data?.result}}</span>
+            <span *ngIf="data?.name === 'Suggested Keywords' && data?.result.length > 0">Suggested Keywords : {{data?.result}}</span>
+            <span *ngIf="data?.name === 'Language Analysis' && data?.status"></span>
+            <span *ngIf="data?.name === 'Translation' || data?.name === 'Hindi Translation'">
               <span *ngIf="data?.status !=='Passed'">
                 Translation Unavailable
               </span>
               <span *ngIf="data?.status === 'Passed'">
-                This content is translated to Hindi and Translated ID: {{data?.result?.translated_id}}
+                Content is translated to Hindi and Translated ID:
+                {{data?.result?.translated_id}}
               </span>
             </span>
-            <span *ngIf="data?.name === 'Content quality' && data?.status">{{(data?.name).charAt(0).toUpperCase()
-              + (data?.name).slice(1)}} check is {{data?.status}}</span>
+            <span *ngIf="data?.name === 'Content quality' && data?.status">Content quality check is {{(data?.status).toLowerCase()}}</span>
             <div class="" *ngIf="(data.type==='quality') && showResult">
               <div class="content-status" *ngFor="let dataResult of
                 data.result">
@@ -103,60 +128,70 @@
                   <strong class="text-emphasized">
                     {{dataResult?.name}}
                   </strong>
-                  <span *ngIf="dataResult?.name === 'Audio'">
-                    {{dataResult?.name}} accuracy is
+                  <span *ngIf="dataResult?.name === 'Audio'" >
+                    {{dataResult?.name}} accuracy is {{dataResult?.status}}
+                   <span *ngIf="dataResult?.result?.percentile">
                     {{dataResult?.result?.percentile}}
+                   </span>
                   </span>
                   <span *ngIf="dataResult?.name === 'Image'">
-                    {{dataResult?.name}} quality {{dataResult?.status}}
-                    <span *ngIf="dataResult?.result && dataResult?.status === 'Failed'"
-                    >Due to:{{dataResult?.result}} </span>
+                    {{dataResult?.name}} quality is {{dataResult?.status}}
+                    <span *ngIf="dataResult?.result && dataResult?.status ===
+                      'Failed'">Due to:{{dataResult?.result}} </span>
                   </span>
                   <span *ngIf="dataResult?.name === 'Profanity'">
-                    {{dataResult?.name}} check is {{dataResult?.status}} <span *ngIf="dataResult?.result && dataResult?.status === 'Failed'">Due to the presence of: {{dataResult?.result}}</span>
+                    {{dataResult?.name}} check is {{dataResult?.status}} 
+                    <span
+                      *ngIf="dataResult?.result && dataResult?.status ===
+                      'Failed'">Due to the presence of: {{dataResult?.result}}</span>
                   </span>
-                  <span *ngIf="dataResult?.name === 'Size'">
-                    {{dataResult?.name}} is {{dataResult?.result || 0}}
+                  <span *ngIf="dataResult?.name === 'Size' && dataResult?.result">
+                    {{dataResult?.name}}<span *ngIf="dataResult?.result.length > 0">:{{dataResult?.result}}</span> check is {{dataResult?.status}}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div class="add-padding" *ngIf="(data.type==='ln_analysis') && showLanguage">
+            <div class="add-padding" *ngIf="(data.type==='ln_analysis') &&
+              showLanguage">
               <div class="content-status" *ngFor="let lnResult of data.result |
                 keyvalue">
                 <div class="text-gray col-10 truncate truncate-target">
                   <span *ngIf="lnResult?.key === 'totalWordCount'">
-                    <strong  class="text-emphasized"> Total Word Count:</strong>
+                    <strong class="text-emphasized"> Total Word Count:</strong>
                     {{lnResult?.value || 0}}
                   </span>
                   <span *ngIf="lnResult?.key === 'nonThresholdVocabulary'">
-                    <strong  class="text-emphasized"> No Threshold Vocabulary:  </strong>
-                   Word Count: {{lnResult?.value.wordCount}} with Percentage: {{lnResult?.value['%OfWords']}}%
+                    <strong class="text-emphasized"> No Threshold Vocabulary:
+                    </strong>
+                    Word Count: {{lnResult?.value.wordCount}} with Percentage:
+                    {{lnResult?.value['%OfWords']}}%
                   </span>
                   <span *ngIf="lnResult?.key === 'thresholdVocabulary'">
-                    <strong  class="text-emphasized"> Threshold Vocabulary: </strong>
-                    Word Count: {{lnResult?.value.wordCount}} with Percentage: {{lnResult?.value['%OfWords']}}%
+                    <strong class="text-emphasized"> Threshold Vocabulary:
+                    </strong>
+                    Word Count: {{lnResult?.value.wordCount}} with Percentage:
+                    {{lnResult?.value['%OfWords']}}%
                   </span>
                   <span *ngIf="lnResult?.key === 'partsOfSpeech'">
-                    <strong  class="text-emphasized">  Parts Of Speech: </strong>
-                       Adjective: {{lnResult?.value.adjective}}, 
-                       Conjunction: {{lnResult?.value.conjunction}}, 
-                       Preposition: {{lnResult?.value.preposition}}, 
-                       Verb: {{lnResult?.value.verb}}, 
-                       Noun: {{lnResult?.value.noun}}, 
-                       Adverb: {{lnResult?.value.adverb}},
-                       Article: {{lnResult?.value.article}}
+                    <strong class="text-emphasized"> Parts Of Speech: </strong>
+                    Adjective: {{lnResult?.value.adjective}},
+                    Conjunction: {{lnResult?.value.conjunction}},
+                    Preposition: {{lnResult?.value.preposition}},
+                    Verb: {{lnResult?.value.verb}},
+                    Noun: {{lnResult?.value.noun}},
+                    Adverb: {{lnResult?.value.adverb}},
+                    Article: {{lnResult?.value.article}}
                   </span>
 
 
                 </div>
               </div>
 
-   
+
             </div>
           </div>
-          <div class="d-flex col-2 flex-shrink-0">
+          <!-- <div class="d-flex col-2 flex-shrink-0">
             <span class="status-actions">Required</span> &nbsp;
             <span *ngIf="data.type === 'quality'"
               (click)="showResult=
@@ -164,13 +199,13 @@
               <a *ngIf="showResult"> Hide details</a>
               <a *ngIf="!showResult"> Show details</a>
             </span>
-            <span *ngIf="data.type == 'ln_analysis'"
-            (click)="showLanguage=
-            !showLanguage">
-            <a *ngIf="showLanguage"> Hide details</a>
-            <a *ngIf="!showLanguage"> Show details</a>
-          </span>
-          </div>
+            <span *ngIf="data.type == 'ln_analysis' && data?.result ! == {}"
+              (click)="showLanguage=
+              !showLanguage">
+              <a *ngIf="showLanguage"> Hide details</a>
+              <a *ngIf="!showLanguage"> Show details</a>
+            </span>
+          </div> -->
         </div>
       </div>
 

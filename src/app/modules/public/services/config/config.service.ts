@@ -73,7 +73,7 @@ export class ConfigService {
             status: ['Review', 'Draft', 'Live'],
           },
           exists: ['cml_tags', 'cml_profanity', 'cml_audio',
-          'ckp_size', 'ckp_profanity', 'ckp_audio', 'ckp_image', 'ckp_keywords', 'ckp_lng_analysis', 'ckp_translation'],
+          'ckp_profanity', 'ckp_audio', 'ckp_image', 'ckp_keywords', 'ckp_lng_analysis', 'ckp_translation'],
           fields: ['identifier', 'name', 'description', 'status',
           'contentType', 'createdBy', 'appIcon', 'cml_tags', 'cml_profanity',
           'cml_audio', 'ckp_size', 'ckp_profanity', 'ckp_audio', 'ckp_image', 'ckp_keywords', 'ckp_lng_analysis', 'ckp_translation'],

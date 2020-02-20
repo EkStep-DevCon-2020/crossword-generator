@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-content-review',
@@ -13,13 +14,10 @@ export class ContentReviewComponent implements OnInit {
 
   curationMetaData = [];
   contentId;
-  checksFailed = 0;
-  checksPassed = 0;
-  checksPending = 0;
+  checks = {failed: {count: 0 , type: []}, passed: {count: 0, type: []}, pending: {count: 0, type: [] }};
   showResult = true;
   showLanguage = true;
   title;
-
   constructor(public config: ConfigService, public activatedRoute: ActivatedRoute, public location: Location) { }
 
   ngOnInit() {
@@ -34,71 +32,73 @@ export class ContentReviewComponent implements OnInit {
 
   getMetaData(contents) {
     const data = this.config.getCurationData(contents);
-
-    console.log('datattaat', data);
-    // this.curationMetaData = _.find(data, { identifier: this.contentId });
     this.title = _.get(data[0], 'name');
-    // this.curationMetaData = this.curationMetaData.metaData;
     this.modifyCurationData(_.get(data[0], 'metaData'));
   }
   checkCurationStatus(curationStatus) {
-    _.forEach(curationStatus, curation => {
+    const metaData = _.find(curationStatus, {type: 'quality'});
+    _.forEach(metaData.result, curation => {
       if (curation.status === 'Passed') {
-        this.checksPassed++;
-      } else if (curation.status === 'Pending') {
-        this.checksPending++;
-      } else if (curation.status === 'Failed') {
-        this.checksFailed++;
-      }
+          this.checks.passed.count++;
+          this.checks.passed.type.push(curation.type);
+        } else if (curation.status === 'Pending') {
+          this.checks.pending.count++;
+          this.checks.pending.type.push(curation.type);
+        } else if (curation.status === 'Failed') {
+          this.checks.failed.count++;
+          this.checks.failed.type.push(curation.type);
+        }
     });
+
   }
 
   modifyCurationData(metaData) {
-    console.log('vbfmdbhfgjkhug', metaData);
+
     const quality = [];
-    // const this.curationMetaData = [];
-    // let lnAnalysis = [];
-    
-    const qualityData = _.filter(metaData, (meta) => {
-      return meta.type === 'quality';
-    })
-    const status = _.find(qualityData, { name: 'Profanity' }).status !== 'Passed' ?
-      _.find(qualityData, { name: 'Profanity' }).status :
-      _.find(qualityData, { name: 'Size' }).status;
-    const qualityCuration = {name: 'Content quality', type: 'quality', status, result: qualityData };
-    this.curationMetaData.push(qualityCuration);
-    _.forEach(metaData, (value, key) => {
-      if (_.startsWith(key, 'cml')) {
-        const data = (value.status === 'Passed' || value.status === 'Failed') ?
-          (value.type === 'quality' ? quality.push(value) : this.curationMetaData.push(value)) : value;
-      } else {
-
-        // if (key === 'ckp_lng_analysis') {
-        //   lnAnalysis = _.map(value.result, (res, key1) => {
-        //     return {[key1]: res};
-        //   });
-        //   value.result = lnAnalysis;
-        //   console.log('lvdlvkld', value.result);
-        // }
-        const data = (value.type === 'quality') ? (_.isEmpty(_.find(quality, { name: value.name })) ? quality.push(value) : value)
-          : this.curationMetaData.push(value);
-
+    const qualityData = [];
+    _.filter(metaData, (meta, key) => {
+      if (meta.type === 'quality') {
+        qualityData.push({[key]: meta});
       }
-      console.log(this.curationMetaData)
     });
 
-    console.log('qfvgdfgvfduyg', quality);
-    // const status = _.find(quality, { name: 'Profanity' }).status !== 'Passed' ?
-    //   _.find(quality, { name: 'Profanity' }).status :
-    //   _.find(quality, { name: 'Size' }).status;
-    // const qualityCuration = {name: 'Content quality', type: 'quality', status, result: quality };
-    // this.curationMetaData.push(qualityCuration);
-    console.log('alllal', this.curationMetaData);
+
+    _.forEach(metaData, (value, key) => {
+      if (_.startsWith(key, 'cml')) {
+        const str  = key.slice(4);
+        const qData = _.find(qualityData, `ckp_${str}`);
+        if (qData) {
+          const objData = Object.values(qData)[0];
+          const data1 = value.type === 'quality' ?
+          ((value.status === 'Passed' || value.status === 'Failed') ?
+          quality.push(value) : quality.push(objData)) : this.curationMetaData.push(value);
+        } else {
+          this.curationMetaData.push(value);
+        }
+      } else {
+        const data = (value.type === 'quality') ? (_.isEmpty(_.find(quality, { name: value.name })) ? quality.push(value) : value)
+          : this.curationMetaData.push(value);
+      }
+    });
+    let status = _.find(quality, {status: 'Failed'});
+    if (status !== 'Failed') {
+      _.map(quality, sta => {
+        if (sta.status !== 'Passed') {
+          status = sta.status;
+        } else {
+          status = sta.status;
+        }
+      });
+    }
+
+    const qualityCuration = {name: 'Content quality', type: 'quality', status, result: quality };
+    this.curationMetaData.unshift(qualityCuration);
     this.checkCurationStatus(this.curationMetaData);
   }
 
   close() {
     this.location.back();
   }
+
 
 }
