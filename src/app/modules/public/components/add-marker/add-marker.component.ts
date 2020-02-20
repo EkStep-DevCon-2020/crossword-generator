@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import * as _ from 'lodash-es';
-import { ConfigService } from '../../services';
+import { ConfigService, TelemetryService } from '../../services';
 import { questionData } from './questionData.data';
 import { map, tap } from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ export class AddMarkerComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() playerConfig: any;
   @Output() refreshEvent = new EventEmitter<any>();
   selectedQuestions: Array<any> = [];
-  constructor(public configService: ConfigService) { }
+  constructor(public configService: ConfigService, public telemetryService: TelemetryService) { }
 
   ngOnInit() {
   }
@@ -59,6 +59,12 @@ export class AddMarkerComponent implements OnInit, AfterViewInit, OnChanges {
     this.markerList.push(markerData);
     this.mcqLayout = false;
     this.updateContentMeta().subscribe((res) => {
+      this.telemetryService.engagement({
+        contentId: this.playerConfig.identifier,
+        contentType: 'interactive_video',
+        contentName: 'interactive_video',
+        profileId: this.telemetryService.profileId
+      });
       this.videoPlayerInstance.markers.add(this.markerList);
       console.log('sucessss');
       this.videoPlayerInstance.pause();

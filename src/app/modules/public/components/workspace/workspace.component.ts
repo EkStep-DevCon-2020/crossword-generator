@@ -25,5 +25,9 @@ export class WorkspaceComponent implements OnInit {
   viewContentQualityStatus(content) {
     this.router.navigate(['/review/', content.identifier]);
   }
+
+  gotoInteractiveVideo() {
+    this.router.navigate(['/interactive-video']);
+  }
 }
 

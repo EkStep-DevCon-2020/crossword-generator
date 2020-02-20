@@ -129,6 +129,7 @@ export class LoginComponent implements OnInit {
             const data = {
               profileId
             };
+            this.telemetryService.profileId = visitedProfiles[0];
             that.telemetryService.visit(data);
           } else {
             console.log('Old visitor');
@@ -167,6 +168,7 @@ export class LoginComponent implements OnInit {
           const data = {
             profileId: res.result.Visitor[0].osid
           };
+          this.telemetryService.profileId =  res.result.Visitor[0].osid;
           this.telemetryService.visit(data);
           this.openSuccessModal = true;
           this.openErrorModal = false;
