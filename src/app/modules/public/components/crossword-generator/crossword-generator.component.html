@@ -5,12 +5,12 @@
     </div>
     <div class="main-left-content">
       <div id="crossword"></div>
-      <div class="output-section">
+      <!-- <div class="output-section">
         <div id="output">Output</div>
-      </div>
-      <div *ngFor="let edge of filteredEdges">
+      </div> -->
+      <!-- <div *ngFor="let edge of filteredEdges">
         {{edge.word}} - {{edge.clue}}
-      </div>
+      </div> -->
     </div>
 
   </div>
@@ -30,7 +30,7 @@
         <div class="text">{{category || 'Select Category'}}</div>
         <i class="dropdown icon" style="background: none;"></i>
         <div class="menu" suiDropdownMenu>
-          <div *ngFor="let top of topic" class="item" (click)="onCategoryChange(top.type, top.rel);">{{top.type}}</div>
+          <div *ngFor="let top of topic" class="item" (click)="onCategoryChange(top.type, top.rel, top.lang, top.call);">{{top.label}}</div>
         </div>
       </div>
     </div>

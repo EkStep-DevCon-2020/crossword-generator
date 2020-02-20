@@ -1,10 +1,10 @@
 <app-header></app-header>
 <div class="landing-container">
   <div class="sb-card-container">
-    <div class="sb-card" (click)="viewContentQualityStatus(content)">
+    <div class="sb-card"  [routerLink]="['/crossword']">
       <div class="sb-body">
         <div class="sb-title sb__ellipsis sb__ellipsis--two">CrossWords</div>
-        <div  [routerLink]="['/crossword']" class="sb-description">{{content?.description || 'Create crossword puzzle'}}</div>
+        <div  class="sb-description">{{content?.description || 'Create crossword puzzle'}}</div>
       </div>
     </div>
   </div>

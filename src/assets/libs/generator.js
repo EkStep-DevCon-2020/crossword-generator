@@ -1,5 +1,6 @@
 var cw;
 var finalPuzzle;
+var chosenLanguage;
 
 window.onload = function () {
 
@@ -103,12 +104,22 @@ function printJson(groups) {
         }
 
     }
+
+    if(chosenLanguage && chosenLanguage === 'hi') {
+        let across = puzzle.acrossClues.map(p => p.answer);
+        let down = puzzle.downClues.map(p => p.answer);
+        let acrossDown = across.concat(down)
+        let splitChars = splitter.splitGraphemes(acrossDown.join(''))
+        settings.alphabet = [...new Set(splitChars)];
+    } else {
+        settings.alphabet ="ABCÇDEFGHIİJKLMNOÖPQRSŞTUÜVWXYZabcçdefghıijklmnoöpqrsştuüvwxyz"
+    };
     puzzle.settings = settings;
     puzzle.labels = labels;
 
     finalPuzzle = puzzle;
     var json = JSON.stringify(puzzle, null, 4)
-    document.getElementById('output').innerHTML = '<pre>' + json + '</pre>';
+    // document.getElementById('output').innerHTML = '<pre>' + json + '</pre>';
 }
 
 function addLegendToPage(groups) {

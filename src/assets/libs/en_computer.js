@@ -1,4 +1,4 @@
-var en_Computer = [{ word: 'expert', clue: 'a kind of user that wants a customization option.' },
+var en_computer = [{ word: 'expert', clue: 'a kind of user that wants a customization option.' },
 { word: 'computer', clue: 'an electronic device that provides input and produces output.' },
 { word: 'hardware', clue: 'refer to the internal and external physical composition of computer.' },
 { word: 'accuracy', clue: 'a capability of a computer that process users prepared instructions.' },

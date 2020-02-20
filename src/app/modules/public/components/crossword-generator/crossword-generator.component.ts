@@ -1,10 +1,11 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ConfigService } from '../../services';
+import { ConfigService, TelemetryService } from '../../services';
 import { Subscription, of, throwError, Observable, Subject, forkJoin } from 'rxjs';
 import { map, mergeMap, first, catchError } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { UUID } from 'angular2-uuid';
+
 // import path from 'path';
 // import * as path from 'path';
 // import * as fileURLToPath from 'url';
@@ -24,7 +25,16 @@ declare let globalCW: any;
 declare const addLegendToPage: any;
 declare const printJson: any;
 declare const hi_general: any;
+declare const hi_vocabulary: any;
+declare const en_animals: any;
+declare const en_biology: any;
+declare const en_computer: any;
+declare const en_countryCapitals: any;
+declare const en_planets: any;
+declare let chosenLanguage: any;
 declare const finalPuzzle: any;
+declare const settings: any;
+
 // declare const __dirname;
 
 @Component({
@@ -45,10 +55,21 @@ export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
   public showModal = false;
   public editingClues = false;
   public publishedContentURL: any;
+  public currentLanguage;
+  public callType;
   public topic = [
-    {type: 'animal', rel: ['/r/UsedFor', '/r/IsA'], sentence: '___ is used for '},
-    {type: 'fruit', rel: ['/r/HasA', '/r/IsA'], sentence: '___ has a '},
-    {type: 'country', rel: ['/r/HasProperty', '/r/IsA', '/r/dbpedia/capital', '/r/PartOf'], sentence: '___  capital is'}
+    {label: 'Animals', type: 'animal', rel: ['/r/UsedFor', '/r/IsA'], sentence: '___ is used for ', lang: 'en', call: 'api'},
+    {label: 'Fruits', type: 'fruit', rel: ['/r/HasA', '/r/IsA'], sentence: '___ has a ', lang: 'en', call: 'api'},
+    // tslint:disable-next-line:max-line-length
+    {label: 'Countries', type: 'country', rel: ['/r/HasProperty', '/r/IsA', '/r/dbpedia/capital', '/r/PartOf'], sentence: '___  capital is', lang: 'en', call: 'api'},
+    {label: 'Capitals', type: 'capitals', rel: en_countryCapitals, sentence: '', lang: 'en', call: 'local'},
+    {label: 'Animals', type: 'animals', rel: en_animals, sentence: '', lang: 'en', call: 'local'},
+    {label: 'Biology', type: 'biology', rel: en_biology, sentence: '', lang: 'en', call: 'local'},
+    {label: 'Computer', type: 'computer', rel: en_computer, sentence: '', lang: 'en', call: 'local'},
+    {label: 'Country Capital', type: 'capitals', rel: en_countryCapitals, sentence: '', lang: 'en', call: 'local'},
+    {label: 'Planets', type: 'planets', rel: en_planets, sentence: '', lang: 'en', call: 'local'},
+    {label: 'Hindi Vocabulary', type: 'hindi_vocab', rel: hi_vocabulary, sentence: '', lang: 'hi', call: 'local'},
+    {label: 'Hindi General', type: 'hi_general', rel: hi_general, sentence: '', lang: 'hi', call: 'local'}
   ];
 
 
@@ -71,7 +92,7 @@ export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
   ];
 
   public filteredEdges: any;
-  constructor(private http: HttpClient, public configService: ConfigService) { }
+  constructor(private http: HttpClient, public configService: ConfigService, public telemetryService: TelemetryService) { }
 
   ngOnInit() {
     // this.getRows(10);
@@ -79,10 +100,11 @@ export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
 
 
   getRows(val) {
-    this.segmentDimmed = true;
-    this.showEditButton = false;
-    this.category = this.category || 'animal';
-    this.http.get(`${this.conceptNetAPI}${this.category}?rel=${this.relativeParam}&limit=100`).pipe(
+   if (this.callType === 'api') {
+      this.segmentDimmed = true;
+      this.showEditButton = false;
+      this.category = this.category || 'animal';
+      this.http.get(`${this.conceptNetAPI}${this.category}?rel=${this.relativeParam}&limit=100`).pipe(
       mergeMap((res: any) => {
         const results = res.edges;
 
@@ -119,11 +141,21 @@ export class CrosswordGeneratorComponent implements OnInit, AfterViewInit  {
       generate(Number(val), this.filteredEdges);
       this.wordClues = globalCW;
     });
+  } else {
+    this.filteredEdges = this.relativeParam;
+    this.showEditButton = true;
+    this.customClues = true;
+    generate(Number(val), this.filteredEdges);
+    this.wordClues = globalCW;
+  }
 }
 
-onCategoryChange(type, rel) {
+onCategoryChange(type, rel, lang, callType) {
   this.category  = type;
-  this.relativeParam = rel[0];
+  this.relativeParam = _.isUndefined(rel[0].word) ? rel[0] : rel;
+  this.currentLanguage = lang;
+  chosenLanguage = this.currentLanguage;
+  this.callType = callType;
 }
 
 formClue(clue, rel) {
@@ -181,6 +213,12 @@ createContent() {
   this.http.post('http://localhost:2345/createzip', data, {headers}).subscribe((response: any) => {
     console.log(response);
     const contentID = response.data.result.node_id;
+    this.telemetryService.engagement({
+      contentId: contentID,
+      contentType: 'crossword',
+      contentName: 'crossword',
+      profileId: this.telemetryService.profileId
+    });
     this.publishContent(contentID);
   }, error => {
     console.log(error);
@@ -188,7 +226,6 @@ createContent() {
 }
 
 publishContent(contentID) {
-
   const headers = {
     'Content-Type':  'application/json',
     // tslint:disable-next-line:max-line-length
@@ -216,7 +253,7 @@ publishContent(contentID) {
 }
 
 ngAfterViewInit() {
-  generate(10, hi_general);
+  generate(20, en_countryCapitals);
 }
 
 }
