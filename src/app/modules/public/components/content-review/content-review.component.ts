@@ -58,6 +58,15 @@ export class ContentReviewComponent implements OnInit {
     const quality = [];
     // const this.curationMetaData = [];
     // let lnAnalysis = [];
+    
+    const qualityData = _.filter(metaData, (meta) => {
+      return meta.type === 'quality';
+    })
+    const status = _.find(qualityData, { name: 'Profanity' }).status !== 'Passed' ?
+      _.find(qualityData, { name: 'Profanity' }).status :
+      _.find(qualityData, { name: 'Size' }).status;
+    const qualityCuration = {name: 'Content quality', type: 'quality', status, result: qualityData };
+    this.curationMetaData.push(qualityCuration);
     _.forEach(metaData, (value, key) => {
       if (_.startsWith(key, 'cml')) {
         const data = (value.status === 'Passed' || value.status === 'Failed') ?
@@ -75,14 +84,15 @@ export class ContentReviewComponent implements OnInit {
           : this.curationMetaData.push(value);
 
       }
+      console.log(this.curationMetaData)
     });
 
     console.log('qfvgdfgvfduyg', quality);
-    const status = _.find(quality, { name: 'Profanity' }).status !== 'Passed' ?
-      _.find(quality, { name: 'Profanity' }).status :
-      _.find(quality, { name: 'Size' }).status;
-    const qualityCuration = {name: 'Content quality', type: 'quality', status, result: quality };
-    this.curationMetaData.push(qualityCuration);
+    // const status = _.find(quality, { name: 'Profanity' }).status !== 'Passed' ?
+    //   _.find(quality, { name: 'Profanity' }).status :
+    //   _.find(quality, { name: 'Size' }).status;
+    // const qualityCuration = {name: 'Content quality', type: 'quality', status, result: quality };
+    // this.curationMetaData.push(qualityCuration);
     console.log('alllal', this.curationMetaData);
     this.checkCurationStatus(this.curationMetaData);
   }
