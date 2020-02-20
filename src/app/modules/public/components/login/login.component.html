@@ -26,7 +26,7 @@
                     <button type="button" class="capture-btn" id="myBtn" (click)="capture()">Capture</button>
                     <div class="qrcode-link">
                         <span class="seperator">OR</span>
-                        <a (click)="qrCode= !qrCode">QR Code</a>
+                        <a (click)="qrCode= !qrCode; camera.stop();">QR Code</a>
                     </div>
                 </div>
     
@@ -38,7 +38,7 @@
                     </div>
                     <div class="qrcode-link">
                         <span class="seperator">OR</span>
-                        <a (click)="qrCode= !qrCode; startCamera();">Capture</a>
+                        <a (click)="qrCode= !qrCode; captureImage = false;">Capture</a>
                     </div>
                 </div>
             </div>
